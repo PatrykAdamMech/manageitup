@@ -19,12 +19,6 @@ public class ProjectController {
         return projectRepository.findAll();
     }
 
-    @PostMapping("/addDummy")
-    public ResponseEntity<String> addDummyProject() {
-        projectRepository.save(new Project());
-        return new ResponseEntity<>("OK!", HttpStatus.OK);
-    }
-
     @PostMapping("/add")
     public ResponseEntity<String> addProject(@RequestBody Project project) {
         if(project != null) {

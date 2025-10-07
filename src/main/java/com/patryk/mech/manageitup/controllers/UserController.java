@@ -2,6 +2,7 @@ package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.repositories.UserRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
     @Autowired
@@ -22,16 +24,6 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> saveUser(@RequestParam String username,
-                                           @RequestParam String password,
-                                           @RequestParam String name,
-                                           @RequestParam String lastName) {
-        userRepository.save(new User(username, password, name, lastName));
-        return new ResponseEntity<String>("Saved!", HttpStatus.OK);
-
-    }
-
-    @PostMapping("/add/json")
     public ResponseEntity<String> saveUser(@RequestBody User user) {
         if(user != null) {
             userRepository.save(user);

@@ -28,21 +28,52 @@ public final class ProjectParticipant {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    private UUID projectID;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="Users", referencedColumnName = "id")
     private User user;
     private ProjectRoles role;
 
+    private UUID projectID;
+
     public ProjectParticipant() {}
 
-    public ProjectParticipant(UUID projectID, ProjectRoles role, User userID) {
-        this.projectID = projectID;
+    public ProjectParticipant(ProjectRoles role, User userID) {
         this.role = role;
         this.user = userID;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ProjectRoles getRole() {
+        return role;
+    }
+
+    public void setRole(ProjectRoles role) {
+        this.role = role;
+    }
+
+    public UUID getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(UUID projectID) {
+        this.projectID = projectID;
     }
 }

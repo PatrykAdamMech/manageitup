@@ -4,21 +4,45 @@ import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name="Workflows")
 public class Workflow {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
-    private int priority;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="ProjectStatuses", referencedColumnName = "id")
-    private ProjectParticipant status;
+    @OneToMany(mappedBy = "id")
+    private List<ProjectStatus> statuses;
 
-    Workflow() {}
+    public Workflow() {}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public List<ProjectStatus> getStatus() {
+        return statuses;
+    }
+
+    public void setStatus(List<ProjectStatus> statuses) {
+        this.statuses = statuses;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

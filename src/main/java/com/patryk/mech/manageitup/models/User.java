@@ -20,9 +20,7 @@ public class User {
     private LocalDateTime createdOn;
     private LocalDateTime lastModified;
 
-    public User() {
-        this("null","null","null","null");
-    }
+    public User() {}
 
     public User(String username, String password, String name, String lastName) {
         this.username = username;
