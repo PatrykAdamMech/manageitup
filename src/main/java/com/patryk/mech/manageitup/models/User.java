@@ -1,6 +1,9 @@
 package com.patryk.mech.manageitup.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
@@ -15,16 +18,23 @@ public class User {
 
     private String username;
     private String password;
+    private String email;
     private String name;
     private String lastName;
+    @CreationTimestamp
+    @Column
     private LocalDateTime createdOn;
+
+    @UpdateTimestamp
+    @Column
     private LocalDateTime lastModified;
 
     public User() {}
 
-    public User(String username, String password, String name, String lastName) {
+    public User(String username, String password, String email, String name, String lastName) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.name = name;
         this.lastName = lastName;
         this.createdOn = LocalDateTime.now();
@@ -32,7 +42,7 @@ public class User {
     }
 
     public User(User user) {
-        this(user.getUsername(), user.getPassword(), user.getName(), user.getLastName());
+        this(user.getUsername(), user.getPassword(), user.getEmail(), user.getName(), user.getLastName());
     }
 
     public UUID getId() {
@@ -91,5 +101,11 @@ public class User {
         this.username = username;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

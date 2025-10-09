@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8081"})
 @Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
@@ -53,5 +54,10 @@ public class UserController {
         }
 
         return new ResponseEntity<String>("Not Found!", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResult> login(@RequestBody LoginRequest login) {
+
     }
 }

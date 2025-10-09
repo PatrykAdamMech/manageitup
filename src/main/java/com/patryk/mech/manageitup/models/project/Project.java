@@ -3,6 +3,8 @@ package com.patryk.mech.manageitup.models.project;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.Workflow;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +31,12 @@ public class Project {
     @OneToMany(mappedBy = "projectID")
     private List<ProjectParticipant> participants;
 
+    @CreationTimestamp
+    @Column
     private LocalDateTime startDate;
+
+    @UpdateTimestamp
+    @Column
     private LocalDateTime endDate;
 
     public Project() {

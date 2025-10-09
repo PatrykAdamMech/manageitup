@@ -1,0 +1,9 @@
+<div class="content" role="main">
+  <div *ngIf="loading">
+    <p>Loading...</p>
+  </div>
+  <div *ngFor="let user of users">
+    <div>{{user.name}}</div>
+  </div>
+  <router-outlet></router-outlet>
+</div>
