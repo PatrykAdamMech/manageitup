@@ -3,10 +3,12 @@ package com.patryk.mech.manageitup.models.project;
 import com.patryk.mech.manageitup.models.User;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="ProjectParticipants")
+@Table(name="ProjectParticipants") // should extend User
 public final class ProjectParticipant {
 
     public enum ProjectRoles {
@@ -36,13 +38,15 @@ public final class ProjectParticipant {
     private User user;
     private ProjectRoles role;
 
-    private UUID projectID;
+    @ManyToMany(mappedBy = "participants")
+    private List<Project> projects;
 
     public ProjectParticipant() {}
 
     public ProjectParticipant(ProjectRoles role, User userID) {
         this.role = role;
         this.user = userID;
+        this.projects = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -69,11 +73,22 @@ public final class ProjectParticipant {
         this.role = role;
     }
 
-    public UUID getProjectID() {
-        return projectID;
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    public void setProjectID(UUID projectID) {
-        this.projectID = projectID;
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public void removeProject(UUID id) {
+        final Project matching = this.projects.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if(matching != null) {
+            this.projects.remove(matching);
+        }
     }
 }

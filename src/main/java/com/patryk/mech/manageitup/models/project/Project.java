@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,12 @@ public class Project {
     @JoinColumn(name="Workflows", referencedColumnName = "id")
     private Workflow workflow;
 
-    @OneToMany(mappedBy = "projectID")
+    @ManyToMany
+    @JoinTable(
+            name = "project_and_participants",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id")
+    )
     private List<ProjectParticipant> participants;
 
     @CreationTimestamp
@@ -40,6 +46,7 @@ public class Project {
     private LocalDateTime endDate;
 
     public Project() {
+        this.participants = new ArrayList<>();
         this.startDate = LocalDateTime.now();
         this.endDate = LocalDateTime.now();
     }
@@ -98,5 +105,9 @@ public class Project {
 
     public void setParticipants(List<ProjectParticipant> participants) {
         this.participants = participants;
+    }
+
+    public boolean addParticipant(ProjectParticipant participant) {
+        return this.participants.add(participant);
     }
 }

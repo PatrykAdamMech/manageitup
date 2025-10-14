@@ -1,32 +1,56 @@
 package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.User;
+import com.patryk.mech.manageitup.models.login.LoginRequest;
+import com.patryk.mech.manageitup.models.login.LoginResult;
 import com.patryk.mech.manageitup.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8081"})
 @Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
     @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
     private UserRepository userRepository;
 
+//    @GetMapping("/all")
+//    public Iterable<User> getAllUsers() {
+//        return userRepository.findAll();
+//    }
+
     @GetMapping("/all")
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public Iterable<User> getMatchingUsers(@RequestParam(required = false) String matcher) {
+
+        if(Objects.isNull(matcher)) return userRepository.findAll();
+
+        Iterable<User> users = userRepository.findAll();
+
+        List<User> matchingUsers = new ArrayList<>();
+        for(User u : users) {
+            if(u.getUsername().contains(matcher)) matchingUsers.add(u);
+        }
+
+        return matchingUsers;
     }
 
     @PostMapping("/add")
     public ResponseEntity<String> saveUser(@RequestBody User user) {
         if(user != null) {
+            user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
             return new ResponseEntity<String>("OK!", HttpStatus.OK);
         }
@@ -54,10 +78,5 @@ public class UserController {
         }
 
         return new ResponseEntity<String>("Not Found!", HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResult> login(@RequestBody LoginRequest login) {
-
     }
 }

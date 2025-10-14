@@ -8,9 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, UUID> {
 
 
-    Optional<User> findById(UUID id);
     Optional<User> findByEmail(String email);
 }

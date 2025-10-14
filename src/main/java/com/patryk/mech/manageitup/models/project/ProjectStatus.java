@@ -1,5 +1,6 @@
 package com.patryk.mech.manageitup.models.project;
 
+import com.patryk.mech.manageitup.models.Workflow;
 import jakarta.persistence.*;
 
 import java.util.UUID;

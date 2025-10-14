@@ -17,7 +17,12 @@ public class Workflow {
     private UUID id;
     private String name;
 
-    @OneToMany(mappedBy = "id")
+    @ManyToMany
+    @JoinTable(
+            name = "workflow_statuses",
+            joinColumns = @JoinColumn(name = "workflow_id"),
+            inverseJoinColumns = @JoinColumn(name = "status_id")
+    )
     private List<ProjectStatus> statuses;
 
     public Workflow() {}
@@ -44,5 +49,9 @@ public class Workflow {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean addStatus(ProjectStatus ps) {
+        return this.statuses.add(ps);
     }
 }
