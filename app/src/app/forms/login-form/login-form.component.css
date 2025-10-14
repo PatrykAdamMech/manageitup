@@ -1,0 +1,15 @@
+mat-form-field {
+  padding: 3px;
+}
+
+.login-form-div {
+  display: block;
+  width: 30%;
+}
+
+button {
+  min-width:100px;
+  max-width:300px;
+  min-height:40px;
+  max-height:120px;
+}
