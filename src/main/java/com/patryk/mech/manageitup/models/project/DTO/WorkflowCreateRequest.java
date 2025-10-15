@@ -11,19 +11,10 @@ import java.util.UUID;
 
 public class WorkflowCreateRequest {
 
-    private UUID id;
     private String name;
     private List<UUID> statuses;
 
     public WorkflowCreateRequest() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public List<UUID> getStatuses() {
@@ -45,7 +36,6 @@ public class WorkflowCreateRequest {
     public Workflow asWorkflow(EntityManager em) {
         Workflow w = new Workflow();
 
-        w.setId(this.getId());
         w.setName(this.getName());
         List<ProjectStatus> s = new ArrayList<>();
         for(UUID ps : statuses) {

@@ -2,4 +2,8 @@ app-component-main {
 
 }
 
+.table-bordered {
+  border: 1px solid white;
+}
+
 

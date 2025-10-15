@@ -8,7 +8,10 @@ import { UserListComponent } from './lists/user-list/user-list.component';
 import { UserFormComponent } from './forms/user-form/user-form.component';
 import { LoginFormComponent } from './forms/login-form/login-form.component';
 import { UserService } from './services/user-service.service';
+import { ProjectService } from './services/project-service.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +21,9 @@ import { AdminPanelComponent } from './sites/admin-panel/admin-panel.component';
 import { HomeComponent } from './sites/home/home.component';
 import { TopRibbonComponent } from './lists/top-ribbon/top-ribbon.component';
 import { ProjectListComponent } from './lists/project-list/project-list.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -40,9 +46,14 @@ import { ProjectListComponent } from './lists/project-list/project-list.componen
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule,
+    BrowserAnimationsModule
   ],
-  providers: [UserService],
+  providers: [UserService, ProjectService],
   bootstrap: [AppComponent,TopRibbonComponent]
 })
 export class AppModule { }

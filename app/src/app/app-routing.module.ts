@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserListComponent } from './lists/user-list/user-list.component';
+import { ProjectListComponent } from './lists/project-list/project-list.component';
 import { UserFormComponent } from './forms/user-form/user-form.component';
 import { LoginFormComponent } from './forms/login-form/login-form.component';
 import { AppComponent } from './app.component';
@@ -13,6 +14,7 @@ const routes: Routes = [
 { path: 'home', component: HomeComponent },
 { path: 'users/list', component: UserListComponent },
 { path: 'users/login', component: LoginFormComponent },
+{ path: 'projects/list', component: ProjectListComponent },
 { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard] },
 { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];

@@ -1,4 +1,5 @@
 <div>
   <button matButton="filled" [routerLink]="'/home'">Home</button>
   <button matButton="filled" (click)="logout()" *ngIf="isVisible()">Logout</button>
+  <button matButton="filled" (click)="goBack()">Back</button>
 </div>

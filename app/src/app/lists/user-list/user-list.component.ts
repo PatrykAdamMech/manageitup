@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../model/user';
 import { UserService } from '../../services/user-service.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
 selector: 'app-user-list',

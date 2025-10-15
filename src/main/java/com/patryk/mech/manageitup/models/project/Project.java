@@ -1,5 +1,6 @@
 package com.patryk.mech.manageitup.models.project;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.Workflow;
 import jakarta.persistence.*;
@@ -35,6 +36,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id")
     )
+    @JsonManagedReference
     private List<ProjectParticipant> participants;
 
     @CreationTimestamp

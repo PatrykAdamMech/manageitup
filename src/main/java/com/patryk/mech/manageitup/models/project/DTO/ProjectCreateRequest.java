@@ -4,9 +4,6 @@ import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
-import com.patryk.mech.manageitup.repositories.ProjectParticipantRepository;
-import com.patryk.mech.manageitup.repositories.UserRepository;
-import com.patryk.mech.manageitup.repositories.WorkflowRepository;
 import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;

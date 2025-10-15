@@ -1,5 +1,6 @@
 package com.patryk.mech.manageitup.models.project;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.patryk.mech.manageitup.models.User;
 import jakarta.persistence.*;
 
@@ -39,6 +40,7 @@ public final class ProjectParticipant {
     private ProjectRoles role;
 
     @ManyToMany(mappedBy = "participants")
+    @JsonBackReference
     private List<Project> projects;
 
     public ProjectParticipant() {}

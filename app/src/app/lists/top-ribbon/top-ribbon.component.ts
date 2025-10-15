@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth-service.service';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-ribbon',
@@ -8,7 +10,15 @@ import { AuthService } from '../../services/auth-service.service';
 })
 export class TopRibbonComponent {
 
-  constructor(public authService: AuthService) {}
+  constructor(private location: Location, private router: Router, public authService: AuthService) {}
+
+  goBack() {
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['/home']); // or your default like '/projects'
+    }
+  }
 
   logout() {
     this.authService.logout();
