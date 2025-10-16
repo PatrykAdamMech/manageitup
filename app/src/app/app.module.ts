@@ -10,20 +10,25 @@ import { LoginFormComponent } from './forms/login-form/login-form.component';
 import { UserService } from './services/user-service.service';
 import { ProjectService } from './services/project-service.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 import { AdminPanelComponent } from './sites/admin-panel/admin-panel.component';
 import { HomeComponent } from './sites/home/home.component';
 import { TopRibbonComponent } from './lists/top-ribbon/top-ribbon.component';
 import { ProjectListComponent } from './lists/project-list/project-list.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ParticipantsListDialogComponent } from './lists/participants-list-dialog/participants-list-dialog.component';
+import { UserListDialogComponent } from './lists/user-list-dialog/user-list-dialog.component';
+import { UserDisplayComponent } from './model/user-display/user-display.component';
+import { WorlflowDialogComponent } from './lists/worlflow-dialog/worlflow-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +39,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminPanelComponent,
     HomeComponent,
     TopRibbonComponent,
-    ProjectListComponent
+    ProjectListComponent,
+    ParticipantsListDialogComponent,
+    UserListDialogComponent,
+    UserDisplayComponent,
+    WorlflowDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +60,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatDialogModule,
     MatPaginatorModule,
     MatSortModule,
-    BrowserAnimationsModule
+    MatDialogModule,
+    MatExpansionModule,
+    MatDividerModule
   ],
   providers: [UserService, ProjectService],
   bootstrap: [AppComponent,TopRibbonComponent]

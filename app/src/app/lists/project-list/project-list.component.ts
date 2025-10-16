@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Project } from '../../model/project/project';
 import { ProjectService } from '../../services/project-service.service';
+import { ParticipantsListDialogComponent } from '../participants-list-dialog/participants-list-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-project-list',
@@ -11,6 +13,7 @@ export class ProjectListComponent implements OnInit {
 
   projects: Project[] = [];
   columnsToDisplay: string[] = ['id', 'title', 'owner', 'workflow', 'participants'];
+  readonly dialog = inject(MatDialog);
 
   constructor(private projectService: ProjectService) {}
 
@@ -21,7 +24,22 @@ export class ProjectListComponent implements OnInit {
   }
 
   click() {
-    alert('Clicked!');
+  }
+
+  openParticipants(project: Project, e?: MouseEvent) {
+    e?.stopPropagation();
+    let dialogRef = this.dialog.open(ParticipantsListDialogComponent, {
+      height: '40%',
+      width: '65%',
+      data: project
+    });
+  }
+
+  addNewProject() {
+    let dialogRef = this.dialog.open(ParticipantsListDialogComponent, {
+      height: '400px',
+      width: '600px',
+    });
   }
 
 }

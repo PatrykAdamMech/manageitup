@@ -1,0 +1,18 @@
+<!--<app-user-list [username]="p.user.username"-->
+<!--               [password]="p.user.password"-->
+<!--               [email]="p.user.email"-->
+<!--               [name]="p.user.name"-->
+<!--               [lastName]="p.user.lastName"-->
+<!--               [createdOn]="p.user.createdOn"-->
+<!--               [lastModified]="p.user.lastModified">-->
+
+<!--</app-user-list>-->
+<mat-dialog-content>
+    <p>Project: {{ project.title }}</p>
+    <p>Participants:</p>
+    <ng-container class="participants-list-users" *ngFor="let p of project.participants; let last = last">
+      <p>{{ p.role }}</p>
+      <app-user-display *ngIf="p.user" [user]="p.user"></app-user-display>
+      <mat-divider *ngIf="!last"></mat-divider>
+    </ng-container>
+</mat-dialog-content>

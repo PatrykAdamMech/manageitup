@@ -1,0 +1,13 @@
+<div class="user-list-dialog dialog">
+    <div class="personal-data">
+      <h3>{{ user.name }} {{ user.lastName }}</h3>
+    </div>
+
+    <div class="account-data">
+        <p class="raw-data">{{ user.username }}</p><a class="raw-data-link" href="mailto:{{ user.email }}">{{ user.email }}</a>
+        <p class="raw-data">{{ user.createdOn }}</p><p class="raw-data">{{ user.lastModified }}</p>
+    </div>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Edit</button>
+  </mat-dialog-actions>
+</div>

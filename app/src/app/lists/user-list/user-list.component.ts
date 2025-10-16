@@ -10,6 +10,7 @@ styleUrls: []
 export class UserListComponent implements OnInit {
 
 users: User[] = [];
+columnsToDisplay: string[] = ['id', 'username', 'password', 'email', 'name', 'lastName', 'createdOn', 'lastModified'];
 
 constructor(private userService: UserService) {
 }
