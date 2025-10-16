@@ -29,6 +29,7 @@ import { ParticipantsListDialogComponent } from './lists/participants-list-dialo
 import { UserListDialogComponent } from './lists/user-list-dialog/user-list-dialog.component';
 import { UserDisplayComponent } from './model/user-display/user-display.component';
 import { WorlflowDialogComponent } from './lists/worlflow-dialog/worlflow-dialog.component';
+import { StatusDisplayComponent } from './model/status-display/status-display.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { WorlflowDialogComponent } from './lists/worlflow-dialog/worlflow-dialog
     ParticipantsListDialogComponent,
     UserListDialogComponent,
     UserDisplayComponent,
-    WorlflowDialogComponent
+    WorlflowDialogComponent,
+    StatusDisplayComponent
   ],
   imports: [
     BrowserModule,

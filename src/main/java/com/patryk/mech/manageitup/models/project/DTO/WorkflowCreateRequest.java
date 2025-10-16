@@ -42,7 +42,7 @@ public class WorkflowCreateRequest {
             ProjectStatus status = em.getReference(ProjectStatus.class, ps);
             s.add(status);
         }
-        w.setStatus(s);
+        w.setStatuses(s);
         return w;
     }
 }

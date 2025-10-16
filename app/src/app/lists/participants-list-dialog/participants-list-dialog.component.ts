@@ -3,6 +3,7 @@ import { Project } from '../../model/project/project';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserDisplayComponent } from '../../model/user-display/user-display.component';
 
+
 @Component({
   selector: 'app-participants-list-dialog',
   templateUrl: './participants-list-dialog.component.html',

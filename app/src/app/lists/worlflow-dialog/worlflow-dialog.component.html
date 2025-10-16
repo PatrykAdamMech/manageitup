@@ -1,1 +1,10 @@
-<p>worlflow-dialog works!</p>
+<mat-dialog-content>
+  <p>Project: {{ project.title }}</p>
+  <p>Workflow:</p>
+  <ng-container *ngIf="project.workflow">
+    <ng-container class="workflow-list-statuses" *ngFor="let s of project.workflow.statuses; let last = last">
+      <app-status-display *ngIf="s" [status]="s"></app-status-display>
+      <mat-divider *ngIf="!last"></mat-divider>
+    </ng-container>
+  </ng-container>
+</mat-dialog-content>

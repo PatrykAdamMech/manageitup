@@ -1,3 +1,8 @@
 .mat-column-participants {
   cursor: pointer;
 }
+
+.mat-column-workflow {
+  cursor: pointer;
+}
+

@@ -35,11 +35,11 @@ public class Workflow {
         this.id = id;
     }
 
-    public List<ProjectStatus> getStatus() {
+    public List<ProjectStatus> getStatuses() {
         return statuses;
     }
 
-    public void setStatus(List<ProjectStatus> statuses) {
+    public void setStatuses(List<ProjectStatus> statuses) {
         this.statuses = statuses;
     }
 
