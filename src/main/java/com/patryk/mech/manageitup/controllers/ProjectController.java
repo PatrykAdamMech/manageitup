@@ -1,5 +1,6 @@
 package com.patryk.mech.manageitup.controllers;
 
+import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateRequest;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,5 +60,13 @@ public class ProjectController {
         projectRepository.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
+    }
+
+    @GetMapping("/select")
+    public List<GenericOptionsResponse> select(
+            @RequestParam(required = false) String matcher,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return new ArrayList<>();
     }
 }

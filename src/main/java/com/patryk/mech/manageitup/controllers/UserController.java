@@ -1,20 +1,22 @@
 package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.User;
-import com.patryk.mech.manageitup.models.login.LoginRequest;
-import com.patryk.mech.manageitup.models.login.LoginResult;
+import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
+import com.patryk.mech.manageitup.models.project.DTO.UserOptionProjection;
 import com.patryk.mech.manageitup.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -27,24 +29,35 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-//    @GetMapping("/all")
-//    public Iterable<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
-
     @GetMapping("/all")
-    public Iterable<User> getMatchingUsers(@RequestParam(required = false) String matcher) {
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-        if(Objects.isNull(matcher)) return userRepository.findAll();
+    @GetMapping("/select")
+    public List<GenericOptionsResponse> select(
+            @RequestParam(required = false) String matcher,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        var pageReq = PageRequest.of(0, Math.min(Math.max(limit, 1), 50),
+                Sort.by("name").ascending().and(Sort.by("lastName").ascending()));
 
-        Iterable<User> users = userRepository.findAll();
+        Page<UserOptionProjection> page = (matcher == null || matcher.isBlank())
+                ? userRepository.findAllBy(pageReq)
+                : userRepository
+                .findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                        matcher.trim(), matcher.trim(), matcher.trim(), matcher.trim(), pageReq);
 
-        List<User> matchingUsers = new ArrayList<>();
-        for(User u : users) {
-            if(u.getUsername().contains(matcher)) matchingUsers.add(u);
-        }
+        return page.getContent().stream()
+                .map(u -> new GenericOptionsResponse(u.getId(), buildLabel(u.getName(), u.getLastName(), u.getUsername())))
+                .toList();
+    }
 
-        return matchingUsers;
+    private static String buildLabel(String name, String lastName, String username) {
+        String n = name == null ? "" : name.trim();
+        String l = lastName == null ? "" : lastName.trim();
+        String full = (n + " " + l).trim();
+        return full.isEmpty() ? (username == null ? "" : username) : full;
     }
 
     @PostMapping("/add")

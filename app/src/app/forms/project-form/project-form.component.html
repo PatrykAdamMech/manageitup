@@ -1,0 +1,36 @@
+<div class="project-form form">
+  <div class="project-form-main-data">
+    <mat-form-field>
+      <mat-label>Project title</mat-label>
+      <input matInput>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Choose owner</mat-label>
+      <input
+        matInput
+        [formControl]="ownerCtrl"
+        [matAutocomplete]="auto"
+        autocomplete="off"
+        placeholder="Type at least 2 letters" />
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUser" autoActiveFirstOption>
+        <mat-option *ngFor="let u of (options$ | async) ?? []; trackBy: trackById" [value]="u">
+          {{ u.label }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="project-form-complex-types-container">
+    <div class="project-form-participants">
+
+    </div>
+    <div class="project-form-participants">
+
+    </div>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Textarea</mat-label>
+    <textarea matInput></textarea>
+  </mat-form-field>
+</div>

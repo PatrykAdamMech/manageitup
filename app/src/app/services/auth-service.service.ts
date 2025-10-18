@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { LoginRequestComponent } from '../model/login-request';
 import { LoginResponseComponent } from '../model/login-response';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { API_BASE_URL } from '../tokens';
 
 @Injectable({
 providedIn: 'root'
@@ -10,9 +11,11 @@ providedIn: 'root'
 export class AuthService {
   private logged = false;
 
-  private loginUrl="http://localhost:8081/auth/login";
+  private loginUrl: string;
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient, @Inject(API_BASE_URL) private base: string) {
+    this.loginUrl = base + 'auth/login';
+  }
 
   login(loginRequest: LoginRequestComponent) {
       return this.http.post<LoginResponseComponent>(this.loginUrl, loginRequest);

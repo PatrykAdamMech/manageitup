@@ -19,6 +19,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatOptionModule } from '@angular/material/core';
 import { AdminPanelComponent } from './sites/admin-panel/admin-panel.component';
 import { HomeComponent } from './sites/home/home.component';
 import { TopRibbonComponent } from './lists/top-ribbon/top-ribbon.component';
@@ -30,6 +33,13 @@ import { UserListDialogComponent } from './lists/user-list-dialog/user-list-dial
 import { UserDisplayComponent } from './model/user-display/user-display.component';
 import { WorlflowDialogComponent } from './lists/worlflow-dialog/worlflow-dialog.component';
 import { StatusDisplayComponent } from './model/status-display/status-display.component';
+import { ProjectFormComponent } from './forms/project-form/project-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WorkflowFormComponent } from './forms/workflow-form/workflow-form.component';
+import { ProjectStatusFormComponent } from './forms/project-status-form/project-status-form.component';
+import { ProjectParticipantFormComponent } from './forms/project-participant-form/project-participant-form.component';
+import { API_BASE_URL } from './tokens';
 
 @NgModule({
   declarations: [
@@ -45,7 +55,11 @@ import { StatusDisplayComponent } from './model/status-display/status-display.co
     UserListDialogComponent,
     UserDisplayComponent,
     WorlflowDialogComponent,
-    StatusDisplayComponent
+    StatusDisplayComponent,
+    ProjectFormComponent,
+    WorkflowFormComponent,
+    ProjectStatusFormComponent,
+    ProjectParticipantFormComponent
   ],
   imports: [
     BrowserModule,
@@ -64,9 +78,16 @@ import { StatusDisplayComponent } from './model/status-display/status-display.co
     MatSortModule,
     MatDialogModule,
     MatExpansionModule,
-    MatDividerModule
+    MatDividerModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    MatOptionModule
+    ],
+  providers: [UserService, ProjectService,
+    { provide: API_BASE_URL, useValue: 'http://localhost:8081/' }
   ],
-  providers: [UserService, ProjectService],
   bootstrap: [AppComponent,TopRibbonComponent]
 })
 export class AppModule { }

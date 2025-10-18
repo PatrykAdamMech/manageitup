@@ -154,4 +154,17 @@ public class User {
                 ", lastModified=" + lastModified +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+        return this.id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
 }

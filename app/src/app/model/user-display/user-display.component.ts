@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Inject } from '@angular/core';
 import { User } from '../user';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-display',
@@ -10,6 +11,7 @@ export class UserDisplayComponent {
 
     @Input({ required: true }) user!: User;
 
-    constructor() {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: User) {
+      this.user = data;
     }
 }
