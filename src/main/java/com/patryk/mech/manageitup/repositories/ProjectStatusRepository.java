@@ -5,6 +5,7 @@ import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,6 @@ public interface ProjectStatusRepository extends CrudRepository<ProjectStatus, U
 
     Page<ProjectStatusOptionProjection> findAllBy(Pageable pageable);
 
+    @EntityGraph("ProjectStatus.withProjects")
     Optional<ProjectStatus> findById(@NonNull UUID id);
 }

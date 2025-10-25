@@ -35,14 +35,17 @@ public class WorkflowService {
         return workflowRepository.save(requestToWorkflow(wcr));
     }
 
+    @Transactional
     public Workflow requestToWorkflow(WorkflowCreateRequest wcr) {
 
         if (Objects.nonNull(wcr.getId())) {
-            return em.getReference(Workflow.class, wcr.getId());
+            return workflowRepository.findById(wcr.getId()).orElseThrow(() -> new EntityNotFoundException("Workflow not found: " + wcr.getId()));
         }
 
         Workflow w = new Workflow();
         w.setName(wcr.getName());
+
+        w = workflowRepository.save(w);
 
         for(ProjectStatus ps : wcr.getStatuses()) {
             ProjectStatus finalStatus;

@@ -3,6 +3,8 @@ package com.patryk.mech.manageitup.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantResponse;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectResponse;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateRequest;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/projects")
@@ -38,8 +41,13 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Project>> getAllProject() {
-        return ResponseEntity.status(HttpStatus.OK).body(projectRepository.findAll());
+    public ResponseEntity<List<ProjectResponse>> getAllProject() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(projectRepository.findAll()
+                    .stream()
+                    .map(ProjectResponse::fromProject)
+                    .toList()
+                );
     }
 
     @PostMapping("/add")

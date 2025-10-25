@@ -1,6 +1,5 @@
 package com.patryk.mech.manageitup.models.project;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.Workflow;
 import jakarta.persistence.*;
@@ -15,7 +14,23 @@ import java.util.UUID;
 
 @Entity
 @Table(name="Projects")
-
+@NamedEntityGraph(
+        name = "Project.withAll",
+        attributeNodes = {
+                @NamedAttributeNode("owner"),
+                @NamedAttributeNode("workflow"),
+                @NamedAttributeNode("status"),
+                @NamedAttributeNode(value = "participants", subgraph = "participants-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "participants-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("user")
+                        }
+                )
+        }
+)
 public class Project {
 
     @Id
@@ -54,7 +69,7 @@ public class Project {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="ProjectStatuses", referencedColumnName = "id")
-    private ProjectStatus currentStatus;
+    private ProjectStatus status;
 
     public Project() {
         this.participants = new ArrayList<>();
@@ -138,11 +153,11 @@ public class Project {
         this.endDate = endDate;
     }
 
-    public ProjectStatus getCurrentStatus() {
-        return currentStatus;
+    public ProjectStatus getStatus() {
+        return status;
     }
 
-    public void setCurrentStatus(ProjectStatus currentStatus) {
-        this.currentStatus = currentStatus;
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
     }
 }

@@ -2,6 +2,7 @@ package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
+import com.patryk.mech.manageitup.models.project.DTO.UserCreateRequest;
 import com.patryk.mech.manageitup.models.project.DTO.UserOptionProjection;
 import com.patryk.mech.manageitup.models.project.DTO.UserResponse;
 import com.patryk.mech.manageitup.repositories.UserRepository;
@@ -72,11 +73,13 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> saveUser(@RequestBody User user) {
+    public ResponseEntity<String> saveUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
             user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            return new ResponseEntity<String>("OK!", HttpStatus.OK);
+
+            UUID savedId = userRepository.save(user.asUser()).getId();
+
+            return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);
         }
 
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);

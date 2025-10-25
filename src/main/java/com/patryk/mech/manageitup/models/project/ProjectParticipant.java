@@ -7,7 +7,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name="ProjectParticipants", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "user_id"}))
-
+@NamedEntityGraph(
+        name = "ProjectParticipant.userAndProject",
+        attributeNodes = {
+                @NamedAttributeNode("user"),
+                @NamedAttributeNode("project")
+        }
+)
 public final class ProjectParticipant {
 
     public enum ProjectRoles {

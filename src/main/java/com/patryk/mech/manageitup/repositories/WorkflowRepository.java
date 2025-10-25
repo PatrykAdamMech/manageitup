@@ -2,12 +2,15 @@ package com.patryk.mech.manageitup.repositories;
 
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.project.DTO.WorkflowOptionProjection;
+import org.hibernate.jdbc.Work;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,5 +20,9 @@ public interface WorkflowRepository extends CrudRepository<Workflow, UUID> {
 
     Page<WorkflowOptionProjection> findAllBy(Pageable pageable);
 
+    @EntityGraph("Workflow.withStatuses")
     Optional<Workflow> findById(@NonNull UUID id);
+
+    @EntityGraph("Workflow.withStatuses")
+    List<Workflow> findAll();
 }

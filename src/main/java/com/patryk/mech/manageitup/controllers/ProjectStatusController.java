@@ -1,7 +1,9 @@
 package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantResponse;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectStatusOptionProjection;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectStatusResponse;
 import com.patryk.mech.manageitup.models.project.DTO.UserOptionProjection;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import com.patryk.mech.manageitup.repositories.ProjectStatusRepository;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/status")
@@ -28,8 +31,15 @@ public class ProjectStatusController {
     private ProjectStatusRepository psRepository;
 
     @GetMapping("/all")
-    public Iterable<ProjectStatus> getAllUsers() {
-        return psRepository.findAll();
+    public ResponseEntity<List<ProjectStatusResponse>> getAllStatuses() {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                    StreamSupport
+                    .stream(psRepository.findAll().spliterator(), false)
+                    .map(ProjectStatusResponse::fromStatus)
+                    .toList()
+                );
     }
 
     @GetMapping("/all/{id}")

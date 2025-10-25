@@ -80,6 +80,13 @@ public class ProjectParticipantCreateRequest {
             pp.setUserId(user);
         }
 
+        if(Objects.nonNull(this.getProjectId())) {
+            Project project = em.getReference(Project.class, this.getProjectId());
+            if(Objects.nonNull(project)) {
+                pp.setProject(project);
+            }
+        }
+
         return pp;
     }
 

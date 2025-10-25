@@ -44,7 +44,6 @@ public class ProjectService {
         System.out.println("REQUEST: " + request);
 
         Project finalProject = new Project();
-        //UUID newProjectId = projectRepository.save(finalProject).getId();
 
         finalProject.setTitle(request.getTitle());
         finalProject.setStartDate(request.getStartDate());

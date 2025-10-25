@@ -12,6 +12,21 @@ import java.util.UUID;
 
 @Entity
 @Table(name="Workflows")
+@NamedEntityGraph(
+        name = "Workflow.withStatuses",
+        attributeNodes = {
+                @NamedAttributeNode(value = "statuses", subgraph = "statuses-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "statuses-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("name"),
+                                @NamedAttributeNode("priority")
+                        }
+                )
+        }
+)
 public class Workflow {
 
     @Id

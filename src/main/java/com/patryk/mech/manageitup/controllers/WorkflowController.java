@@ -2,8 +2,10 @@ package com.patryk.mech.manageitup.controllers;
 
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantResponse;
 import com.patryk.mech.manageitup.models.project.DTO.WorkflowCreateRequest;
 import com.patryk.mech.manageitup.models.project.DTO.WorkflowOptionProjection;
+import com.patryk.mech.manageitup.models.project.DTO.WorkflowResponse;
 import com.patryk.mech.manageitup.repositories.WorkflowRepository;
 import com.patryk.mech.manageitup.services.WorkflowService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/workflows")
@@ -36,8 +39,14 @@ public class WorkflowController {
     }
 
     @GetMapping("/all")
-    public Iterable<Workflow> getAllWorkflows() {
-        return workflowRepository.findAll();
+    public ResponseEntity<List<WorkflowResponse>> getAllWorkflows() {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(workflowRepository.findAll()
+                        .stream()
+                        .map(WorkflowResponse::fromWorkflow)
+                        .toList()
+                );
     }
 
     @GetMapping("/all/{id}")

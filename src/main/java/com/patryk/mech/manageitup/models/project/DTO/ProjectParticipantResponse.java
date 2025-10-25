@@ -12,6 +12,7 @@ public class ProjectParticipantResponse {
     private UUID id;
     private UserResponse user;
     private ProjectParticipant.ProjectRoles role;
+    private UUID projectId;
 
     public ProjectParticipantResponse() {
     }
@@ -20,6 +21,7 @@ public class ProjectParticipantResponse {
         this.setId(participant.getId());
         this.setUser(participant.getUser() == null ? null : UserResponse.fromUser(participant.getUser()));
         this.setRole(participant.getRole());
+        this.setProjectId(participant.getProject() == null ? null : participant.getProject().getId());
     }
 
     public UUID getId() {
@@ -44,6 +46,14 @@ public class ProjectParticipantResponse {
 
     public void setRole(ProjectParticipant.ProjectRoles role) {
         this.role = role;
+    }
+
+    public UUID getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     @Transactional

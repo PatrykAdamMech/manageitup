@@ -2,20 +2,14 @@ package com.patryk.mech.manageitup.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +17,28 @@ import java.util.UUID;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name="Users")
+@NamedEntityGraph(
+        name = "User.withRelations",
+        attributeNodes = {
+                @NamedAttributeNode(value = "participantList", subgraph = "participant-subgraph"),
+                @NamedAttributeNode(value = "ownedProjects", subgraph = "projects-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "participant-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("project")
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "projects-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("workflow"),
+                                @NamedAttributeNode("status")
+                        }
+                )
+        }
+)
 public class User {
 
     public enum UserRoles {
@@ -69,7 +85,7 @@ public class User {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @JsonIgnore
     @Nullable
-    private List<Project> ownedProject;
+    private List<Project> ownedProjects;
 
     public User() {}
 
@@ -170,12 +186,12 @@ public class User {
     }
 
     @Nullable
-    public List<Project> getOwnedProject() {
-        return ownedProject;
+    public List<Project> getOwnedProjects() {
+        return ownedProjects;
     }
 
-    public void setOwnedProject(@Nullable List<Project> ownedProject) {
-        this.ownedProject = ownedProject;
+    public void setOwnedProjects(@Nullable List<Project> ownedProjects) {
+        this.ownedProjects = ownedProjects;
     }
 
     @Override
