@@ -1,1 +1,57 @@
-<p>project-participant-form works!</p>
+<form [formGroup]="form" (ngSubmit)="save()" class="participant-form form">
+<mat-dialog-content>
+  <h3>Manage project participants</h3>
+  <div formArrayName="participants" *ngIf="participantsFA.length">
+    <div *ngFor="let g of participantsFA.controls; let i = index; trackBy: trackByIndex"
+         [formGroupName]="i"
+         class="participant-row">
+      <mat-form-field class="flex-1" appearance="fill">
+        <mat-label>User</mat-label>
+        <input
+          matInput
+          formControlName="user"
+          [matAutocomplete]="auto"
+          (blur)="enforceOption(i)"/>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          autoActiveFirstOption
+          [displayWith]="displayUser"
+          (optionSelected)="onUserSelected(i, $event.option.value)">
+          <mat-option *ngFor="let opt of optionsStreams[i] | async" [value]="opt">
+            {{ opt.label }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="g.get('user')?.hasError('optionRequired')">
+          Please select a user from the list.
+        </mat-error>
+        <mat-hint>Type 2+ letters to search</mat-hint>
+        <mat-error *ngIf="g.get('user')?.hasError('required')">User is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-48" appearance="fill">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let r of (roleOptions)" [value]="r">
+            {{ r }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-icon-button color="warn" type="button"
+              (click)="removeParticipantRow(i)" [disabled]="participantsFA.length === 1">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-2">
+    <button mat-stroked-button type="button" (click)="addParticipantRow()">Add participant</button>
+  </div>
+</mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>

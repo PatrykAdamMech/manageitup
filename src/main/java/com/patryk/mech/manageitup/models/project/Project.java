@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name="Projects")
+
 public class Project {
 
     @Id
@@ -22,35 +24,42 @@ public class Project {
 
     private String title;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="Users", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="Workflows", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workflow_id")
     private Workflow workflow;
 
-    @ManyToMany
-    @JoinTable(
-            name = "project_and_participants",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
-    @JsonManagedReference
+    @OneToMany(mappedBy = "project",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<ProjectParticipant> participants;
 
     @CreationTimestamp
     @Column
-    private LocalDateTime startDate;
+    private LocalDateTime creationTimeStamp;
 
     @UpdateTimestamp
     @Column
-    private LocalDateTime endDate;
+    private LocalDateTime lastUpdatedTimestamp;
+
+    @Column
+    private LocalDate startDate;
+
+    @Column
+    private LocalDate endDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="ProjectStatuses", referencedColumnName = "id")
+    private ProjectStatus currentStatus;
 
     public Project() {
         this.participants = new ArrayList<>();
-        this.startDate = LocalDateTime.now();
-        this.endDate = LocalDateTime.now();
+        this.creationTimeStamp = LocalDateTime.now();
+        this.lastUpdatedTimestamp = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -61,20 +70,20 @@ public class Project {
         this.id = id;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public LocalDateTime getLastUpdatedTimestamp() {
+        return lastUpdatedTimestamp;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    public void setLastUpdatedTimestamp(LocalDateTime lastUpdatedTimestamp) {
+        this.lastUpdatedTimestamp = lastUpdatedTimestamp;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public LocalDateTime getCreationTimeStamp() {
+        return creationTimeStamp;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public void setCreationTimeStamp(LocalDateTime creationTimeStamp) {
+        this.creationTimeStamp = creationTimeStamp;
     }
 
     public User getOwner() {
@@ -111,5 +120,29 @@ public class Project {
 
     public boolean addParticipant(ProjectParticipant participant) {
         return this.participants.add(participant);
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public ProjectStatus getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(ProjectStatus currentStatus) {
+        this.currentStatus = currentStatus;
     }
 }

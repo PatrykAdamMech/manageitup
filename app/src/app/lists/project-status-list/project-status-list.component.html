@@ -1,0 +1,7 @@
+<div class="project-status-list">
+  <h4>
+    <ng-container *ngFor="let s of statuses; let last = last">
+        {{ s.name }}<span *ngIf="!last"> -> </span>
+    </ng-container>
+  </h4>
+</div>

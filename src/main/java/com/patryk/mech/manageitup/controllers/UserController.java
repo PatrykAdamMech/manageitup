@@ -3,20 +3,20 @@ package com.patryk.mech.manageitup.controllers;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
 import com.patryk.mech.manageitup.models.project.DTO.UserOptionProjection;
+import com.patryk.mech.manageitup.models.project.DTO.UserResponse;
 import com.patryk.mech.manageitup.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/users")
@@ -30,8 +30,19 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/all")
-    public Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+
+        Iterable<User> users = userRepository.findAll();
+
+        return StreamSupport
+                .stream(users.spliterator(), false)
+                .map(UserResponse::fromUser)
+                .toList();
+    }
+
+    @GetMapping("/all/{id}")
+    public User getAllUsers(@PathVariable("id") UUID id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @GetMapping("/select")
@@ -43,7 +54,7 @@ public class UserController {
                 Sort.by("name").ascending().and(Sort.by("lastName").ascending()));
 
         Page<UserOptionProjection> page = (matcher == null || matcher.isBlank())
-                ? userRepository.findAllBy(pageReq)
+                ? userRepository.findAllOptionsBy(pageReq)
                 : userRepository
                 .findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
                         matcher.trim(), matcher.trim(), matcher.trim(), matcher.trim(), pageReq);

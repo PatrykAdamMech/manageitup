@@ -20,6 +20,10 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private base: string
     return this.http.get<User[]>(this.usersUrl + '/all');
   }
 
+  public findById(id: string): Observable<User> {
+    return this.http.get<User>(this.usersUrl + '/all/'+id);
+  }
+
   public findOptions(matcher: string): Observable<UserOption[]> {
       return this.http.get<UserOption[]>(this.usersUrl + '/select', {
         params: { matcher }

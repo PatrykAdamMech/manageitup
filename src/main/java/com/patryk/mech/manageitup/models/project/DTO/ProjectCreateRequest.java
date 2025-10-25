@@ -58,25 +58,30 @@ public class ProjectCreateRequest {
 
         project.setTitle(this.title);
 
-        Workflow workflow = em.getReference(Workflow.class, this.getWorkflowId());
-        if(Objects.nonNull(workflow)) {
-            project.setWorkflow(workflow);
-        }
+        System.out.println("asProject");
 
-        User user = em.getReference(User.class, this.getOwnerId());
-        if(Objects.nonNull(user)) {
-            project.setOwner(user);
-        }
-
-        List<ProjectParticipant> parts = new ArrayList<>();
-
-        for(UUID pp : this.getParticipants()) {
-            ProjectParticipant participant = em.getReference(ProjectParticipant.class, pp);
-            if(Objects.nonNull(participant)) {
-                parts.add(participant);
+        if (Objects.nonNull(this.workflowId)) {
+            Workflow workflow = em.getReference(Workflow.class, this.getWorkflowId());
+            if (Objects.nonNull(workflow)) {
+                project.setWorkflow(workflow);
             }
         }
+        if (Objects.nonNull(this.ownerId)) {
+            User user = em.getReference(User.class, this.getOwnerId());
+            if (Objects.nonNull(user)) {
+                project.setOwner(user);
+            }
+        }
+        List<ProjectParticipant> parts = new ArrayList<>();
 
+        if(Objects.nonNull(this.participants)) {
+            for (UUID pp : this.getParticipants()) {
+                ProjectParticipant participant = em.getReference(ProjectParticipant.class, pp);
+                if (Objects.nonNull(participant)) {
+                    parts.add(participant);
+                }
+            }
+        }
         project.setParticipants(parts);
 
         return project;

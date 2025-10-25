@@ -1,5 +1,12 @@
 package com.patryk.mech.manageitup.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.patryk.mech.manageitup.models.project.Project;
+import com.patryk.mech.manageitup.models.project.ProjectParticipant;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,8 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name="Users")
 public class User {
@@ -51,6 +60,16 @@ public class User {
     @UpdateTimestamp
     @Column
     private LocalDateTime lastModified;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Nullable
+    private List<ProjectParticipant> participantList;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Nullable
+    private List<Project> ownedProject;
 
     public User() {}
 
@@ -139,6 +158,24 @@ public class User {
 
     public void setRole(UserRoles role) {
         this.role = role;
+    }
+
+    @Nullable
+    public List<ProjectParticipant> getParticipantList() {
+        return participantList;
+    }
+
+    public void setParticipantList(@Nullable List<ProjectParticipant> participantList) {
+        this.participantList = participantList;
+    }
+
+    @Nullable
+    public List<Project> getOwnedProject() {
+        return ownedProject;
+    }
+
+    public void setOwnedProject(@Nullable List<Project> ownedProject) {
+        this.ownedProject = ownedProject;
     }
 
     @Override

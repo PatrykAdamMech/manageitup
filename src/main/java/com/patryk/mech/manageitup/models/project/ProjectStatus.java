@@ -1,6 +1,9 @@
 package com.patryk.mech.manageitup.models.project;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.patryk.mech.manageitup.models.Workflow;
+import com.patryk.mech.manageitup.services.WorkflowService;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -13,6 +16,12 @@ public class ProjectStatus {
     private UUID id;
     private String name;
     private int priority;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workflow_id")
+    @JsonIgnore
+    @Nullable
+    private Workflow workflow;
 
     public ProjectStatus() {}
 
@@ -38,5 +47,23 @@ public class ProjectStatus {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Nullable
+    public Workflow getWorkflow() {
+        return workflow;
+    }
+
+    public void setWorkflow(@Nullable Workflow workflow) {
+        this.workflow = workflow;
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectStatus{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", priority=" + priority +
+                '}';
     }
 }

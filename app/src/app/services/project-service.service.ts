@@ -18,4 +18,9 @@ export class ProjectService {
     return this.http.get<Project[]>(this.projectsUrl + '/all');
   }
 
+  public save(pcr: ProjectCreateRequest) {
+    console.log('Prepared POST body (service): ' + JSON.stringify(pcr, null, 4));
+    return this.http.post<string>(this.projectsUrl + '/add/full', pcr);
+  }
+
 }

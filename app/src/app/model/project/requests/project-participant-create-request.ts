@@ -1,11 +1,13 @@
+import { ProjectRoles } from '../project-participant';
+
 export class ProjectParticipantCreateRequest {
-  userId: string;
-  role: ProjectParticipant.ProjectRoles;
-  projectIds: Array<string>;
+  userId: string | undefined;
+  role: ProjectRoles;
+  projectId: string | null;
 
   constructor(ppcr: Partial<ProjectParticipantCreateRequest> = {}) {
-    this.userId = projectParticipant?.userId || '';
-    this.role = projectParticipant?.role || ProjectRoles.DEVELOPER;
-    this.projectIds = projectParticipant?.projectIds || [];
+    this.userId = ppcr?.userId;
+    this.role = ppcr?.role || ProjectRoles.DEVELOPER;
+    this.projectId = ppcr?.projectId || null;
   }
 }

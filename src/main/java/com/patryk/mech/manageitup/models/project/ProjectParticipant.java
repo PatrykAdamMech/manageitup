@@ -1,15 +1,13 @@
 package com.patryk.mech.manageitup.models.project;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.patryk.mech.manageitup.models.User;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="ProjectParticipants") // should extend User
+@Table(name="ProjectParticipants", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "user_id"}))
+
 public final class ProjectParticipant {
 
     public enum ProjectRoles {
@@ -34,21 +32,21 @@ public final class ProjectParticipant {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="Users", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     private ProjectRoles role;
 
-    @ManyToMany(mappedBy = "participants")
-    @JsonBackReference
-    private List<Project> projects;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     public ProjectParticipant() {}
 
-    public ProjectParticipant(ProjectRoles role, User userID) {
+    public ProjectParticipant(ProjectRoles role, User userID, Project project) {
         this.role = role;
         this.user = userID;
-        this.projects = new ArrayList<>();
+        this.project = project;
     }
 
     public UUID getId() {
@@ -63,7 +61,7 @@ public final class ProjectParticipant {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUserId(User user) {
         this.user = user;
     }
 
@@ -75,22 +73,11 @@ public final class ProjectParticipant {
         this.role = role;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public Project getProject() {
+        return this.project;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public void removeProject(UUID id) {
-        final Project matching = this.projects.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-
-        if(matching != null) {
-            this.projects.remove(matching);
-        }
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

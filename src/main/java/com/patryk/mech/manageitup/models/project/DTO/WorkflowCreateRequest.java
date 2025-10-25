@@ -3,25 +3,30 @@ package com.patryk.mech.manageitup.models.project.DTO;
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import com.patryk.mech.manageitup.repositories.ProjectStatusRepository;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class WorkflowCreateRequest {
 
+    @Nullable
+    private UUID id;
     private String name;
-    private List<UUID> statuses;
+    private List<ProjectStatus> statuses;
 
     public WorkflowCreateRequest() {
     }
 
-    public List<UUID> getStatuses() {
+    public List<ProjectStatus> getStatuses() {
         return statuses;
     }
 
-    public void setStatuses(List<UUID> statuses) {
+    public void setStatuses(List<ProjectStatus> statuses) {
         this.statuses = statuses;
     }
 
@@ -33,16 +38,21 @@ public class WorkflowCreateRequest {
         this.name = name;
     }
 
-    public Workflow asWorkflow(EntityManager em) {
-        Workflow w = new Workflow();
+    @Nullable
+    public UUID getId() {
+        return id;
+    }
 
-        w.setName(this.getName());
-        List<ProjectStatus> s = new ArrayList<>();
-        for(UUID ps : statuses) {
-            ProjectStatus status = em.getReference(ProjectStatus.class, ps);
-            s.add(status);
-        }
-        w.setStatuses(s);
-        return w;
+    public void setId(@Nullable UUID id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkflowCreateRequest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", statuses=" + statuses +
+                '}';
     }
 }

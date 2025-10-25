@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication//(exclude = {DataSourceAutoConfiguration.class }) // disable DB connection for now
 //@ComponentScans(@ComponentScan("/repositories"))
-@ComponentScan(basePackages = {"com.patryk.mech.manageitup", "com.patryk.mech.manageitup.repositories"})
+@ComponentScan(basePackages = {"com.patryk.mech.manageitup", "com.patryk.mech.manageitup.repositories", "com.patryk.mech.manageitup.config"})
 public class ManageitupApplication {
 
 	public static void main(String[] args) {

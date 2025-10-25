@@ -9,6 +9,8 @@ import { UserFormComponent } from './forms/user-form/user-form.component';
 import { LoginFormComponent } from './forms/login-form/login-form.component';
 import { UserService } from './services/user-service.service';
 import { ProjectService } from './services/project-service.service';
+import { WorkflowService } from './services/workflow-service.service';
+import { ProjectStatusService } from  './services/project-status-service.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -28,6 +30,8 @@ import { TopRibbonComponent } from './lists/top-ribbon/top-ribbon.component';
 import { ProjectListComponent } from './lists/project-list/project-list.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ParticipantsListDialogComponent } from './lists/participants-list-dialog/participants-list-dialog.component';
 import { UserListDialogComponent } from './lists/user-list-dialog/user-list-dialog.component';
 import { UserDisplayComponent } from './model/user-display/user-display.component';
@@ -40,6 +44,8 @@ import { WorkflowFormComponent } from './forms/workflow-form/workflow-form.compo
 import { ProjectStatusFormComponent } from './forms/project-status-form/project-status-form.component';
 import { ProjectParticipantFormComponent } from './forms/project-participant-form/project-participant-form.component';
 import { API_BASE_URL } from './tokens';
+import { ProjectParticipantListComponent } from './lists/project-participant-list/project-participant-list.component';
+import { ProjectStatusListComponent } from './lists/project-status-list/project-status-list.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +65,9 @@ import { API_BASE_URL } from './tokens';
     ProjectFormComponent,
     WorkflowFormComponent,
     ProjectStatusFormComponent,
-    ProjectParticipantFormComponent
+    ProjectParticipantFormComponent,
+    ProjectParticipantListComponent,
+    ProjectStatusListComponent
   ],
   imports: [
     BrowserModule,
@@ -83,9 +91,11 @@ import { API_BASE_URL } from './tokens';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
-    MatOptionModule
+    MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule
     ],
-  providers: [UserService, ProjectService,
+  providers: [UserService, ProjectService, WorkflowService, ProjectStatusService,
     { provide: API_BASE_URL, useValue: 'http://localhost:8081/' }
   ],
   bootstrap: [AppComponent,TopRibbonComponent]

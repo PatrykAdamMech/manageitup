@@ -1,9 +1,11 @@
 package com.patryk.mech.manageitup.models;
 
+import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,13 +19,10 @@ public class Workflow {
     private UUID id;
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "workflow_statuses",
-            joinColumns = @JoinColumn(name = "workflow_id"),
-            inverseJoinColumns = @JoinColumn(name = "status_id")
-    )
-    private List<ProjectStatus> statuses;
+    @OneToMany(mappedBy = "workflow",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    private List<ProjectStatus> statuses = new ArrayList<>();
 
     public Workflow() {}
 
@@ -52,6 +51,22 @@ public class Workflow {
     }
 
     public boolean addStatus(ProjectStatus ps) {
+
+        ps.setWorkflow(this);
         return this.statuses.add(ps);
+    }
+
+    public boolean removeStatus(ProjectStatus ps) {
+        ps.setWorkflow(null);
+        return this.statuses.remove(ps);
+    }
+
+    @Override
+    public String toString() {
+        return "Workflow{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", statuses=" + statuses +
+                '}';
     }
 }

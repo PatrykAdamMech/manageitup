@@ -1,1 +1,46 @@
-<p>workflow-form works!</p>
+<form [formGroup]="form" (ngSubmit)="save()" class="workflow-form form">
+  <mat-dialog-content>
+    <h3>Create new workflow</h3>
+  <mat-form-field>
+    <mat-label>Workflow name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+
+  <div formArrayName="statuses">
+    <div *ngFor="let g of statusesFA.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i" class="workflow-form-statuses">
+      <mat-form-field class="existing-status">
+        <mat-label>Pick existing status</mat-label>
+        <input
+          matInput
+          [matAutocomplete]="auto"
+          formControlName="name" />
+        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption
+                          [displayWith]="displayStatus">
+          <mat-option *ngFor="let opt of optionsStreams[i] | async" [value]="opt">
+            {{ opt.label }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="w-36" appearance="fill">
+        <mat-label>Priority</mat-label>
+        <input type="number" matInput formControlName="priority" />
+      </mat-form-field>
+
+      <button mat-icon-button color="warn" type="button" (click)="removeStatusRow(i)" [disabled]="statusesFA.length === 1">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+    <div class="mt-2">
+      <button mat-stroked-button type="button" (click)="addStatusRow()">Add status</button>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Save
+  </button>
+</mat-dialog-actions>
+
+</form>

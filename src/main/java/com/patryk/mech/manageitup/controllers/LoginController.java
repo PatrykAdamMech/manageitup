@@ -35,7 +35,6 @@ public class LoginController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResult> login(@RequestBody LoginRequest loginRequest) {
-
         Optional<User> user = users.findByEmail(loginRequest.getEmail());
 
         if(user.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResult(false, LoginResult.Result.NOT_REGISTERED));

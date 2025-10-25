@@ -40,17 +40,6 @@ public class ProjectParticipantController {
             ProjectParticipant proPart = participant.asProjectParticipant(this.entityManager);
             ppRepository.save(proPart);
 
-            List<UUID> projectList = participant.getProjectIds();
-
-            if(projectList != null) {
-                for(UUID id : participant.getProjectIds()) {
-                    Project proRef = entityManager.getReference(Project.class, id);
-                    if(proRef != null) {
-                        proRef.addParticipant(proPart);
-                    }
-                }
-            }
-
             return new ResponseEntity<String>("Saved!", HttpStatus.OK);
         }
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);

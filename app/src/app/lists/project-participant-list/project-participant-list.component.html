@@ -1,0 +1,24 @@
+<div class="card my-5">
+  <div class="card-body">
+    <div class="list-body">
+      <ng-container *ngFor="let p of participants">
+        <h3>{{p.user?.name}} {{p.user?.lastName}}</h3>
+        <table>
+          <tr>
+            <td>Role:</td>
+            <td>{{ p.role }}</td>
+          </tr>
+          <tr>
+            <td>Username:</td>
+            <td>{{p.user?.username}}</td>
+          </tr>
+          <tr>
+            <td>Email:</td>
+            <td>{{ p.user?.email }}</td>
+          </tr>
+        </table>
+        <br />
+      </ng-container>
+    </div>
+  </div>
+</div>

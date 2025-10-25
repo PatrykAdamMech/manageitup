@@ -1,36 +1,88 @@
-<div class="project-form form">
-  <div class="project-form-main-data">
+<form class="project-form form" [formGroup]="mainFormGroup" (ngSubmit)="save()">
+  <button matMiniFab type="submit">
+    <mat-icon>save</mat-icon>
+  </button>
+  <div class="project-form-main-data" >
+    <h3>Project details</h3>
     <mat-form-field>
       <mat-label>Project title</mat-label>
-      <input matInput>
+      <input matInput formControlName="title">
     </mat-form-field>
     <mat-form-field>
       <mat-label>Choose owner</mat-label>
       <input
         matInput
         [formControl]="ownerCtrl"
-        [matAutocomplete]="auto"
+        [matAutocomplete]="ownerAuto"
         autocomplete="off"
         placeholder="Type at least 2 letters" />
 
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUser" autoActiveFirstOption>
+      <mat-autocomplete
+        #ownerAuto="matAutocomplete"
+        [displayWith]="displayUser"
+        autoActiveFirstOption
+        (optionSelected)="onOwnerSelected($event)">
         <mat-option *ngFor="let u of (options$ | async) ?? []; trackBy: trackById" [value]="u">
           {{ u.label }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Project start date</mat-label>
+      <input matInput
+             [matDatepicker]="startDate"
+             [formControl]="startDateControl">
+      <mat-datepicker-toggle matIconSuffix [for]="startDate"></mat-datepicker-toggle>
+      <mat-datepicker #startDate></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Project end date</mat-label>
+      <input matInput
+             [matDatepicker]="endDate"
+             [formControl]="endDateControl">
+      <mat-datepicker-toggle matIconSuffix [for]="endDate"></mat-datepicker-toggle>
+      <mat-datepicker #endDate></mat-datepicker>
+    </mat-form-field>
   </div>
   <div class="project-form-complex-types-container">
-    <div class="project-form-participants">
+    <div class="project-form-workflow">
+      <h3>Workflow</h3>
+      <mat-form-field>
+        <mat-label>Choose workflow</mat-label>
+        <input
+          matInput
+          [formControl]="workflowCtrl"
+          [matAutocomplete]="workflowAuto"
+          autocomplete="off"
+          placeholder="Type at least 2 letters" />
 
+        <mat-autocomplete
+          #workflowAuto="matAutocomplete"
+          [displayWith]="displayWorkflow"
+          autoActiveFirstOption
+          (optionSelected)="onWorkflowSelected($event)">
+          <mat-option *ngFor="let w of (optionsWorkflow$ | async) ?? []; trackBy: trackWorkflowById" [value]="w">
+            {{ w.label }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button matMiniFab (click)="addWorkflow()" type="button">
+        <mat-icon>add</mat-icon>
+      </button>
+      <app-project-status-list
+        [statuses]="statusesToDisplay"
+      ></app-project-status-list>
     </div>
     <div class="project-form-participants">
-
+      <h3>Participants</h3>
+      <button matMiniFab (click)="addParticipant()" type="button">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <div class="project-form-participants-display">
+        <app-project-participant-list
+          [participants]="participants"
+        ></app-project-participant-list>
+      </div>
     </div>
   </div>
-
-  <mat-form-field>
-    <mat-label>Textarea</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>
-</div>
+</form>
