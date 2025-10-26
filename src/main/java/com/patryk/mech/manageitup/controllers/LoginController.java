@@ -25,10 +25,12 @@ public class LoginController {
 
     private final UserRepository users;
     private final PasswordEncoder encoder;
+    private final AuthenticationManager authManager;
 
-    public LoginController(UserRepository users, PasswordEncoder encoder) {
+    public LoginController(UserRepository users, PasswordEncoder encoder, AuthenticationManager authManager) {
         this.users = users;
         this.encoder = encoder;
+        this.authManager = authManager;
     }
 
     @PostMapping(value = "/login",
@@ -40,7 +42,7 @@ public class LoginController {
         if(user.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResult(false, LoginResult.Result.NOT_REGISTERED));
 
         if(!encoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-            return new ResponseEntity<LoginResult>(new LoginResult(false, LoginResult.Result.WRONG_PASSWORD), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new LoginResult(false, LoginResult.Result.WRONG_PASSWORD), HttpStatus.UNAUTHORIZED);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new LoginResult(true, LoginResult.Result.SUCCESSFUL));

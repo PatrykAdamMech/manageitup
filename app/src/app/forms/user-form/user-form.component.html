@@ -1,12 +1,36 @@
 <!-- username, password, email, name, lastName, role -->
-<form class="user-form">
-  <mat-form-field class="user-full-width">
-    <mat-label>Favorite food</mat-label>
-    <input matInput placeholder="Ex. Pizza" value="Sushi">
-  </mat-form-field>
-
-  <mat-form-field class="user-full-width">
-    <mat-label>Leave a comment</mat-label>
-    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
-  </mat-form-field>
+<form class="user-form form" [formGroup]="mainFormGroup" (ngSubmit)="onSubmit()">
+  <button matMiniFab type="submit">
+    <mat-icon>save</mat-icon>
+  </button>
+  <div class="user-form">
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Role</mat-label>
+      <select matNativeControl required formControlName="role">
+        <option value="SYSTEM_ADMIN">System admin</option>
+        <option value="PMO">PMO User</option>
+        <option value="USER">User</option>
+      </select>
+    </mat-form-field>
+  </div>
 </form>

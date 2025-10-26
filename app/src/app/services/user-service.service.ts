@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
+import { UserCreateRequest } from '../model/user-create-request';
 import { UserOption } from '../model/user-option';
 import { LoginRequestComponent } from '../model/login-request';
 import { LoginResponseComponent } from '../model/login-response';
@@ -30,7 +31,16 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private base: string
       });
   }
 
-  public save(user: User) {
-    return this.http.post<User>(this.usersUrl + '/add', user);
+  public save(user: UserCreateRequest) {
+    return this.http.post(this.usersUrl + '/add', user, { responseType: 'text' });
+  }
+
+  public update(user: UserCreateRequest) {
+    return this.http.put(this.usersUrl + '/add', user, { responseType: 'text' });
+  }
+
+  public delete(id: string | null) {
+    if(id == null) return;
+    return this.http.delete(this.usersUrl + '/delete'+id);
   }
 }

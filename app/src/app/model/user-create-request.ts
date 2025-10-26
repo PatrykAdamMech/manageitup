@@ -1,10 +1,6 @@
-export enum UserRoles {
-  SYSTEM_ADMIN = 'SYSTEM_ADMIN',
-  PMO = 'PMO',
-  USER = 'USER'
-}
+import { User, UserRoles } from './user';
 
-export class User {
+export class UserCreateRequest {
   id: string | null;
   username: string;
   password: string;
@@ -12,8 +8,6 @@ export class User {
   name: string;
   lastName: string;
   role: UserRoles;
-  createdOn: string;
-  lastModified: string;
 
   constructor(user: Partial<User> = {}) {
     this.id = user?.id || null;
@@ -23,7 +17,5 @@ export class User {
     this.name = user?.name || '';
     this.lastName = user?.lastName || '';
     this.role = user?.role || UserRoles.USER;
-    this.createdOn = user?.createdOn || '';
-    this.lastModified = user?.lastModified || '';
   }
 }

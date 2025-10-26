@@ -15,6 +15,7 @@ const routes: Routes = [
 { path: 'home', component: HomeComponent },
 { path: 'users/list', component: UserListComponent },
 { path: 'users/login', component: LoginFormComponent },
+{ path: 'users/add', component: UserFormComponent },
 { path: 'projects/list', component: ProjectListComponent },
 { path: 'projects/edit/:id', component: ProjectFormComponent },
 { path: 'projects/add', component: ProjectFormComponent },

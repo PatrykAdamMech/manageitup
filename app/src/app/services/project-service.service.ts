@@ -23,7 +23,6 @@ export class ProjectService {
   }
 
   public save(pcr: ProjectCreateRequest) {
-    console.log('Prepared POST body (service): ' + JSON.stringify(pcr, null, 4));
     return this.http.post(this.projectsUrl + '/add/full', pcr, { responseType: 'text' });
   }
 
