@@ -50,6 +50,15 @@ public class ProjectController {
                 );
     }
 
+    @GetMapping("/all/{id}")
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable UUID id) {
+        Project foundProject = this.projectRepository.findById(id).orElse(null);
+        if(foundProject != null) {
+            return new ResponseEntity<>(ProjectResponse.fromProject(foundProject), HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     @PostMapping("/add")
     public ResponseEntity<String> addProject(@RequestBody ProjectCreateRequest request) {
         if(request != null) {
@@ -70,16 +79,15 @@ public class ProjectController {
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> removeProject(@RequestParam UUID id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> removeProject(@PathVariable UUID id) {
         Project project = projectRepository.findById(id).orElse(null);
         if(project == null) ResponseEntity.status(HttpStatus.NO_CONTENT).body("Project not found!");
 
-        project.setWorkflow(null);
-        project.setOwner(null);
-        project.setParticipants(null);
+//        project.setWorkflow(null);
+//        project.setOwner(null);
+//        project.setParticipants(null);
 
-        projectRepository.save(project);
         projectRepository.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body("Deleted!");

@@ -24,7 +24,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WorkflowFormComponent } from '../../forms/workflow-form/workflow-form.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DateAdapter } from '@angular/material/core';
 
 import {
   map,
@@ -58,7 +59,9 @@ type StatusInput =
 })
 export class ProjectFormComponent implements OnInit {
 
-  @Input() project?: Partial<Project>;
+  project?: Partial<Project>;
+  projectId: string | null = null;
+  isEdit?: boolean;
 
   form = this.fb.nonNullable.group({
     id: this.fb.control<string | null>(null),
@@ -138,16 +141,34 @@ export class ProjectFormComponent implements OnInit {
   );
 
   constructor(private fb: FormBuilder,
+              private route: ActivatedRoute,
               private userService: UserService,
               private workflowService: WorkflowService,
               private statusService: ProjectStatusService,
               private projectService: ProjectService,
-              private router: Router) {}
+              private router: Router,
+              private dateAdapter: DateAdapter<Date>) {
+    this.dateAdapter.setLocale('pl-PL');
+  }
 
   ngOnInit() {
     if (this.project) this.form.patchValue(this.project);
     this.getAvailableUsers('');
     this.getAvailableWorkflows('');
+
+    this.route.paramMap.subscribe(params => {
+        console.log(params);
+        const id = params.get('id');
+        if(id) {
+          this.projectId = id;
+          this.isEdit = true;
+          this.projectService
+
+        }
+        else {
+          this.isEdit = false;
+        }
+    });
   }
 
   getAvailableUsers(matcher: string) {
@@ -248,16 +269,12 @@ export class ProjectFormComponent implements OnInit {
     const calls = statuses.map(s => {
       const priority = (s as any).priority ?? 9;
 
-      // Existing status → fetch by id, but keep provided priority (override API if you want)
-
       if ('id' in s && s.id) {
         return this.statusService.findById(s.id).pipe(
           map(api => new ProjectStatus({ ...api, priority: api.priority ?? priority })),
           catchError(() => of(null)) // skip row on error instead of breaking all
         );
       }
-
-      // New status → build locally from name/label
       const name =
         ('name' in s && s.name) ? s.name :
         ('label' in s && s.label) ? s.label! : '';
@@ -280,8 +297,12 @@ export class ProjectFormComponent implements OnInit {
 
     const finalProject = new ProjectCreateRequest();
 
-    finalProject.startDate = startDate ? startDate : new Date('2000-01-01');
-    finalProject.endDate = endDate ? endDate : new Date('2000-01-01');
+    let convStartDate = this.convertDate(this.dateAdapter.parse(startDate, ''));
+    let convEndDate = this.convertDate(this.dateAdapter.parse(endDate, ''));
+
+
+    finalProject.startDate = convStartDate ? convStartDate : new Date('2000-01-01');
+    finalProject.endDate = convEndDate ? convEndDate : new Date('2000-01-01');
     finalProject.title = title ? title : 'Default title';
     finalProject.ownerId = ownerId  ? ownerId : '';
     finalProject.workflow = this.normalizeWorkflow(workflow);
@@ -340,22 +361,40 @@ export class ProjectFormComponent implements OnInit {
       return finalPP;
   }
 
+  toLocalDateString(date: Date | null | undefined) {
+    if(date == null || date == undefined) return null;
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  }
+
+  convertDate(date: Date | null | undefined): string | null {
+      if(date == null || date == undefined) return null;
+      let convDate = this.dateAdapter.parse(date, '');
+      return this.toLocalDateString(convDate);
+  }
+
   save() {
+    const body = this.prepareProjectForPost();
     if(this.mainFormGroup.invalid) {
       alert('Please fill in all mandatory field!');
       return;
     }
-    const body = this.prepareProjectForPost();
+
     console.log('Prepared POST body' + JSON.stringify(body, null, 4));
-    this.projectService.save(body).subscribe({
-      next: (res) => {
-        console.log('Saved project', res);
-        // navigate or show success message here
-      },
-      error: (err) => {
-        console.error('Save failed', err);
-        alert('Save failed: ' + (err.message || err.statusText));
-      }
-    });
+    if(this.isEdit) {
+
+    } else {
+      this.projectService.save(body).subscribe({
+        next: (res) => {
+          console.log('Saved project');
+          // new dialog with confirmation
+          this.router.navigateByUrl('/projects/list');
+        },
+        error: (err) => {
+          console.error('Save failed', err);
+          alert('Save failed: ' + (err.message || err.statusText));
+        }
+      });
+    }
   }
 }

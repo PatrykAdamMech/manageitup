@@ -6,8 +6,8 @@ export class ProjectCreateRequest {
   participants: Array<ProjectParticipantCreateRequest>;
   workflow: Workflow | null;
   ownerId: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
 
   constructor(pcr: Partial<ProjectCreateRequest> = {}) {
     this.title = pcr?.title || '';

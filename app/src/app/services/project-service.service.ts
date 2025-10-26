@@ -23,4 +23,9 @@ export class ProjectService {
     return this.http.post(this.projectsUrl + '/add/full', pcr, { responseType: 'text' });
   }
 
+  public delete(id: string | null) {
+    if(id == null) return;
+    return this.http.delete(this.projectsUrl + '/delete/'+id);
+  }
+
 }

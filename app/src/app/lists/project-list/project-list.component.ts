@@ -5,6 +5,7 @@ import { UserDisplayComponent } from '../../model/user-display/user-display.comp
 import { ProjectService } from '../../services/project-service.service';
 import { ParticipantsListDialogComponent } from '../participants-list-dialog/participants-list-dialog.component';
 import { WorlflowDialogComponent } from '../worlflow-dialog/worlflow-dialog.component';
+import { DeleteConfirmDialogComponent } from '../../forms/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -16,7 +17,7 @@ import { Router } from '@angular/router';
 export class ProjectListComponent implements OnInit {
 
   projects: Project[] = [];
-  columnsToDisplay: string[] = ['id', 'title', 'owner', 'workflow', 'participants'];
+  columnsToDisplay: string[] = ['id', 'title', 'owner', 'workflow', 'participants', 'startDate', 'endDate'];
   readonly dialog = inject(MatDialog);
 
   constructor(private projectService: ProjectService, private router: Router) {}
@@ -30,6 +31,24 @@ export class ProjectListComponent implements OnInit {
   click() {
   }
 
+  deleteProject(project: Project, e?: MouseEvent) {
+    e?.stopPropagation();
+    let dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
+          height: '150px',
+          width: '350px',
+          data: project
+        });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.projectService.delete(project.id)?.subscribe(deleted => {
+          console.log(deleted);
+        });
+      }
+      window.location.reload();
+    });
+  }
+
   openParticipants(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(ParticipantsListDialogComponent, {
@@ -39,7 +58,7 @@ export class ProjectListComponent implements OnInit {
     });
   }
 
-openWorkflows(project: Project, e?: MouseEvent) {
+  openWorkflows(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(WorlflowDialogComponent, {
       height: '40%',
@@ -48,7 +67,7 @@ openWorkflows(project: Project, e?: MouseEvent) {
     });
   }
 
-openOwner(project: Project, e?: MouseEvent) {
+  openOwner(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(UserDisplayComponent, {
       height: '40%',
@@ -62,6 +81,11 @@ openOwner(project: Project, e?: MouseEvent) {
       height: '400px',
       width: '600px',
     });
+  }
+
+  editProject(project: Project, e?: MouseEvent  ) {
+    e?.stopPropagation();
+    this.router.navigate(['/projects/edit/', project.id]);
   }
 
 }

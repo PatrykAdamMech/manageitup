@@ -16,6 +16,7 @@ const routes: Routes = [
 { path: 'users/list', component: UserListComponent },
 { path: 'users/login', component: LoginFormComponent },
 { path: 'projects/list', component: ProjectListComponent },
+{ path: 'projects/edit/:id', component: ProjectFormComponent },
 { path: 'projects/add', component: ProjectFormComponent },
 { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard] },
 { path: '**', redirectTo: 'home', pathMatch: 'full' }

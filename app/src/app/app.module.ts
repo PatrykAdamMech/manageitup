@@ -46,6 +46,9 @@ import { ProjectParticipantFormComponent } from './forms/project-participant-for
 import { API_BASE_URL } from './tokens';
 import { ProjectParticipantListComponent } from './lists/project-participant-list/project-participant-list.component';
 import { ProjectStatusListComponent } from './lists/project-status-list/project-status-list.component';
+import { CustomDateAdapter } from './custom-date-adapter';
+import { DateAdapter } from '@angular/material/core';
+import { DeleteConfirmDialogComponent } from './forms/delete-confirm-dialog/delete-confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,8 @@ import { ProjectStatusListComponent } from './lists/project-status-list/project-
     ProjectStatusFormComponent,
     ProjectParticipantFormComponent,
     ProjectParticipantListComponent,
-    ProjectStatusListComponent
+    ProjectStatusListComponent,
+    DeleteConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -96,7 +100,8 @@ import { ProjectStatusListComponent } from './lists/project-status-list/project-
     MatNativeDateModule
     ],
   providers: [UserService, ProjectService, WorkflowService, ProjectStatusService,
-    { provide: API_BASE_URL, useValue: 'http://localhost:8081/' }
+    { provide: API_BASE_URL, useValue: 'http://localhost:8081/' },
+    { provide: DateAdapter, useClass: CustomDateAdapter }
   ],
   bootstrap: [AppComponent,TopRibbonComponent]
 })
