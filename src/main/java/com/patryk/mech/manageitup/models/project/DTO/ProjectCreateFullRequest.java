@@ -15,12 +15,21 @@ import java.util.UUID;
 
 public class ProjectCreateFullRequest {
 
+    private UUID id;
     private String title;
     private UUID ownerId;
     private WorkflowCreateRequest workflow;
     private List<ProjectParticipantCreateRequest> participants;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

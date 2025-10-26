@@ -2,6 +2,7 @@ import { Workflow } from '../workflow';
 import { ProjectParticipantCreateRequest } from './project-participant-create-request';
 
 export class ProjectCreateRequest {
+  id: string | null;
   title: string;
   participants: Array<ProjectParticipantCreateRequest>;
   workflow: Workflow | null;
@@ -10,6 +11,7 @@ export class ProjectCreateRequest {
   endDate: Date | string;
 
   constructor(pcr: Partial<ProjectCreateRequest> = {}) {
+    this.id = pcr?.id || null;
     this.title = pcr?.title || '';
     this.ownerId = pcr?.ownerId || '';
     this.workflow = pcr?.workflow || null;

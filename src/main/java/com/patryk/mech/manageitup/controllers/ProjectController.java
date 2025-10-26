@@ -79,6 +79,16 @@ public class ProjectController {
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
+    @PutMapping("/update/full")
+    public ResponseEntity<String> updateProjectFull(@RequestBody ProjectCreateFullRequest request) {
+        if(request != null) {
+            UUID savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
+
+            return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> removeProject(@PathVariable UUID id) {
         Project project = projectRepository.findById(id).orElse(null);

@@ -3,21 +3,25 @@ import { User } from '../../model/user';
 import { UserService } from '../../services/user-service.service';
 
 @Component({
-selector: 'app-user-list',
-templateUrl: './user-list.component.html',
-styleUrls: []
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: []
 })
 export class UserListComponent implements OnInit {
 
-users: User[] = [];
-columnsToDisplay: string[] = ['id', 'username', 'password', 'email', 'name', 'lastName', 'createdOn', 'lastModified'];
+  users: User[] = [];
+  columnsToDisplay: string[] = ['id', 'username', 'password', 'email', 'name', 'lastName', 'createdOn', 'lastModified'];
 
-constructor(private userService: UserService) {
-}
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit() {
     this.userService.findAll().subscribe(data => {
       this.users = data;
     });
+  }
+
+  addNewUser() {
+
   }
 }

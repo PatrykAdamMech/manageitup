@@ -10,14 +10,20 @@ import { Router } from '@angular/router';
 })
 export class TopRibbonComponent {
 
+
+
   constructor(private location: Location, private router: Router, public authService: AuthService) {}
 
   goBack() {
     if (window.history.length > 1) {
       this.location.back();
     } else {
-      this.router.navigate(['/home']); // or your default like '/projects'
+      this.router.navigate(['/home']);
     }
+  }
+
+  goAdminPanel() {
+    this.router.navigate(['/admin-panel']);
   }
 
   logout() {

@@ -8,6 +8,8 @@ export class Project {
   owner: User | null;
   workflow: Workflow | null;
   participants: Array<ProjectParticipant>;
+  startDate: Date | null;
+  endDate: Date | null;
 
 
   constructor(project: Partial<Project> = {}) {
@@ -16,5 +18,7 @@ export class Project {
     this.owner = project?.owner || null;
     this.workflow = project?.workflow || null;
     this.participants = project?.participants || [];
+    this.startDate = project?.startDate || null;
+    this.endDate = project?.endDate || null;
   }
 }

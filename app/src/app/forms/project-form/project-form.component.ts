@@ -63,20 +63,12 @@ export class ProjectFormComponent implements OnInit {
   projectId: string | null = null;
   isEdit?: boolean;
 
-  form = this.fb.nonNullable.group({
-    id: this.fb.control<string | null>(null),
-    title: this.fb.control<string>('', { nonNullable: true }),
-    ownerId: this.fb.control<string | null>(null),
-    workflowId: this.fb.control<string | null>(null),
-    participantIds: this.fb.control<string[]>({ value: [], disabled: false }),
-  });
-
   readonly MIN_CHARS = 2;
 
   // form controls - whatever user sees
-  titleControl = new FormControl(null, Validators.required);
-  startDateControl = new FormControl(null, Validators.required);
-  endDateControl = new FormControl(null, Validators.required);
+  titleControl = new FormControl<string | null>(null, Validators.required);
+  startDateControl = new FormControl<Date | null>(null, Validators.required);
+  endDateControl = new FormControl<Date | null>(null, Validators.required);
   ownerCtrl = new FormControl<UserOption | string>('', Validators.required);
   workflowCtrl = new FormControl<WorkflowOption | string>('', Validators.required);
   participantCtrl = new FormControl<ProjectParticipant[]>([], { nonNullable: true })
@@ -95,7 +87,7 @@ export class ProjectFormComponent implements OnInit {
     startDate: this.startDateControl,
     endDate: this.endDateControl,
     owner: this.ownerCtrl,
-    workflow: new FormControl(),
+    workflow: this.workflowCtrl,
     participants: this.participantCtrl
   });
 
@@ -152,7 +144,6 @@ export class ProjectFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.project) this.form.patchValue(this.project);
     this.getAvailableUsers('');
     this.getAvailableWorkflows('');
 
@@ -162,13 +153,32 @@ export class ProjectFormComponent implements OnInit {
         if(id) {
           this.projectId = id;
           this.isEdit = true;
-          this.projectService
+          this.projectService.findById(id).subscribe(project => {
+              this.mainFormGroup.patchValue({
+                title: project.title,
+                startDate: project.startDate,
+                endDate: project.endDate,
+                owner: this.buildLabel(project.owner?.name, project.owner?.lastName),
+                workflow: project.workflow?.name,
+                participants: project.participants
+            });
+            this.owner = project.owner ?? null;
+            this.workflow = project.workflow ?? null;
+            this.statusesToDisplay = project.workflow?.statuses ?? [];
+            this.participants = project.participants ?? [];
+          });
 
         }
         else {
           this.isEdit = false;
         }
     });
+  }
+
+  buildLabel(x: string | null | undefined, y: string | null | undefined) {
+      if(!x) return y;
+      if(!y) return x;
+      return x + ' ' + y;
   }
 
   getAvailableUsers(matcher: string) {
@@ -185,7 +195,6 @@ export class ProjectFormComponent implements OnInit {
 
   onOwnerSelected(e: MatAutocompleteSelectedEvent) {
     const u = e.option.value as UserOption;
-    this.form.patchValue({ ownerId: u.id });
     this.ownerCtrl.setValue(u, { emitEvent: false });
 
     if(u.id) {
@@ -300,6 +309,7 @@ export class ProjectFormComponent implements OnInit {
     let convStartDate = this.convertDate(this.dateAdapter.parse(startDate, ''));
     let convEndDate = this.convertDate(this.dateAdapter.parse(endDate, ''));
 
+    if(this.isEdit) finalProject.id = this.projectId;
 
     finalProject.startDate = convStartDate ? convStartDate : new Date('2000-01-01');
     finalProject.endDate = convEndDate ? convEndDate : new Date('2000-01-01');
@@ -380,14 +390,23 @@ export class ProjectFormComponent implements OnInit {
       return;
     }
 
-    console.log('Prepared POST body' + JSON.stringify(body, null, 4));
     if(this.isEdit) {
-
+      console.log('Prepared PUT body' + JSON.stringify(body, null, 4));
+      this.projectService.update(body).subscribe({
+        next: (res) => {
+          console.log('Saved project');
+          this.router.navigateByUrl('/projects/list');
+        },
+        error: (err) => {
+          console.error('Save failed', err);
+          alert('Save failed: ' + (err.message || err.statusText));
+        }
+      });
     } else {
+      console.log('Prepared POST body' + JSON.stringify(body, null, 4));
       this.projectService.save(body).subscribe({
         next: (res) => {
           console.log('Saved project');
-          // new dialog with confirmation
           this.router.navigateByUrl('/projects/list');
         },
         error: (err) => {

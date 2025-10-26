@@ -3,6 +3,7 @@ package com.patryk.mech.manageitup.models.project.DTO;
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class WorkflowResponse {
         this.setName(workflow.getName());
         this.setStatuses(ProjectStatusResponse
                 .fromStatusList(workflow.getStatuses()));
+        this.statuses.sort(Comparator.comparingInt(ProjectStatusResponse::getPriority));
     }
 
     public UUID getId() {

@@ -18,9 +18,18 @@ export class ProjectService {
     return this.http.get<Project[]>(this.projectsUrl + '/all');
   }
 
+  public findById(id: string): Observable<Project> {
+    return this.http.get<Project>(this.projectsUrl + '/all/' + id);
+  }
+
   public save(pcr: ProjectCreateRequest) {
     console.log('Prepared POST body (service): ' + JSON.stringify(pcr, null, 4));
     return this.http.post(this.projectsUrl + '/add/full', pcr, { responseType: 'text' });
+  }
+
+  public update(pcr: ProjectCreateRequest) {
+    console.log('Prepared PUT body (service): ' + JSON.stringify(pcr, null, 4));
+    return this.http.put(this.projectsUrl + '/update/full', pcr, { responseType: 'text' });
   }
 
   public delete(id: string | null) {
