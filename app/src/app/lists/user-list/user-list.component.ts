@@ -3,6 +3,7 @@ import { User } from '../../model/user';
 import { UserService } from '../../services/user-service.service';
 import { DeleteConfirmDialogComponent } from '../../forms/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -15,8 +16,7 @@ export class UserListComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   columnsToDisplay: string[] = ['id', 'username', 'password', 'email', 'name', 'lastName', 'createdOn', 'lastModified'];
 
-  constructor(private userService: UserService) {
-  }
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.userService.findAll().subscribe(data => {
@@ -38,7 +38,9 @@ export class UserListComponent implements OnInit {
           console.log(deleted);
         });
       }
-      window.location.reload();
+      this.userService.findAll().subscribe(data => {
+        this.users = data;
+      });
     });
   }
 }

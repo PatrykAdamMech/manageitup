@@ -27,7 +27,6 @@ export class ProjectService {
   }
 
   public update(pcr: ProjectCreateRequest) {
-    console.log('Prepared PUT body (service): ' + JSON.stringify(pcr, null, 4));
     return this.http.put(this.projectsUrl + '/update/full', pcr, { responseType: 'text' });
   }
 

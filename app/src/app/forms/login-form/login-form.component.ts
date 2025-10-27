@@ -16,19 +16,10 @@ constructor(private router: Router, private authService: AuthService) {}
 
   onSubmit() {
       this.authService.login(this.loginModel).subscribe({
-      next: (res: LoginResponseComponent) => {
-        console.log(res);
-        if (res.logged == true) {
-          // mark authenticated and redirect to protected admin panel
-          this.authService.setLoggedIn(true);
-          this.router.navigate(['/admin-panel']);
-        } else {
-          alert('Login failed: ' + res.result);
-        }
-      },
-      error: err => {
-        console.error(err);
-        alert('Login failed: server error');
+      next: () => this.router.navigateByUrl('/admin-panel'),
+      error: error => {
+        console.error(error);
+        alert('Login failed: server error!');
       }
     });
   }

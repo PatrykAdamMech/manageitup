@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER  } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -49,6 +49,17 @@ import { ProjectStatusListComponent } from './lists/project-status-list/project-
 import { CustomDateAdapter } from './custom-date-adapter';
 import { DateAdapter } from '@angular/material/core';
 import { DeleteConfirmDialogComponent } from './forms/delete-confirm-dialog/delete-confirm-dialog.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './guards/auth-interceptor';
+import { AuthService  } from './services/auth-service.service';
+
+export function initAuth(auth: AuthService) {
+  // triggers constructor logic and returns a resolved promise
+  return () => {
+    auth.rehydrateFromStorage(); // make this a sync method
+    return Promise.resolve();
+  };
+}
 
 @NgModule({
   declarations: [
@@ -101,7 +112,9 @@ import { DeleteConfirmDialogComponent } from './forms/delete-confirm-dialog/dele
     ],
   providers: [UserService, ProjectService, WorkflowService, ProjectStatusService,
     { provide: API_BASE_URL, useValue: 'http://localhost:8081/' },
-    { provide: DateAdapter, useClass: CustomDateAdapter }
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: APP_INITIALIZER, useFactory: initAuth, deps: [AuthService], multi: true }
   ],
   bootstrap: [AppComponent,TopRibbonComponent]
 })

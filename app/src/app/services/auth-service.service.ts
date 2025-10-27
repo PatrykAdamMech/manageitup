@@ -4,40 +4,51 @@ import { LoginResponseComponent } from '../model/login-response';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../tokens';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private logged = false;
+  private loggedIn$ = new BehaviorSubject<boolean>(false);
   private loginUrl: string;
 
 constructor(private router: Router, private http: HttpClient, @Inject(API_BASE_URL) private base: string) {
     this.loginUrl = base + 'auth/login';
-    // -> ensure in-memory flag is in sync with persisted state after a full page reload
-    this.logged = localStorage.getItem('manageitup_auth') === 'true';
+    const token = sessionStorage.getItem('token');
+    this.loggedIn$.next(!!token && !this.isExpired(token));
   }
 
-  // mark user logged automatically when login request succeeds
   login(loginRequest: LoginRequestComponent) {
-    return this.http.post<LoginResponseComponent>(this.loginUrl, loginRequest)
-      .pipe(
-        tap(() => this.setLoggedIn(true))
-      );
-  }
-
-  isLoggedIn(): boolean {
-    return this.logged || localStorage.getItem('manageitup_auth') === 'true';
-  }
-
-  setLoggedIn(value: boolean) {
-    this.logged = value;
-    localStorage.setItem('manageitup_auth', value ? 'true' : 'false');
+    return this.http.post<LoginResponseComponent>(this.loginUrl, loginRequest).pipe(
+      tap( response => {
+        const token = response.accessToken ?? '';
+        sessionStorage.setItem('token', token);
+        this.loggedIn$.next(!this.isExpired(token));
+      })
+    );
   }
 
   logout() {
-    this.setLoggedIn(false);
-    this.router.navigate(['/users/login']);
+    sessionStorage.removeItem('token');
+    this.loggedIn$.next(false);
   }
+
+  get token(): string | null { return sessionStorage.getItem('token'); }
+
+  isLoggedIn() { return this.loggedIn$.value; }
+
+  private isExpired(jwt: string): boolean {
+    try {
+      const [, payload] = jwt.split('.');
+      const { exp } = JSON.parse(atob(payload));
+      return Date.now() >= exp * 1000;
+    } catch { return true; }
+  }
+
+  rehydrateFromStorage() {
+    const token = sessionStorage.getItem('token');
+    this.loggedIn$.next(!!token && !this.isExpired(token));
+  }
+
 }

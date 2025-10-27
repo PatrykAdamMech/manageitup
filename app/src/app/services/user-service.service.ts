@@ -41,6 +41,6 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private base: string
 
   public delete(id: string | null) {
     if(id == null) return;
-    return this.http.delete(this.usersUrl + '/delete'+id);
+    return this.http.delete(this.usersUrl + '/delete/'+id);
   }
 }

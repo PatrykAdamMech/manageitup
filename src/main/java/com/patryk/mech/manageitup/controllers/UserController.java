@@ -85,8 +85,8 @@ public class UserController {
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUserById(@RequestParam UUID id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable UUID id) {
         User foundUser = userRepository.findById(id).orElse(null);
         if(foundUser != null) {
             userRepository.delete(foundUser);

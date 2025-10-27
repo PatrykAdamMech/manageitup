@@ -42,9 +42,19 @@ import java.util.UUID;
 public class User {
 
     public enum UserRoles {
-        SYSTEM_ADMIN,
-        PMO,
-        USER
+        SYSTEM_ADMIN("SYSTEM_ADMIN"),
+        PMO("PMO"),
+        USER("USER");
+
+        private String name;
+
+        UserRoles(String name) {
+
+        }
+
+        public String getName() {
+            return this.name;
+        }
     }
 
     @Id
