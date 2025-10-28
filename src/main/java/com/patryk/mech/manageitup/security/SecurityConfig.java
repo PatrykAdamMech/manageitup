@@ -68,12 +68,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeHttpRequests((authorize) -> {
+                        System.out.println("config security: " + Arrays.toString(PERMIT_ALL));
+                        authorize
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .requestMatchers(SYSTEM_ADMIN_WHITELIST).hasRole("SYSTEM_ADMIN")
-                        .anyRequest().authenticated()
-                ).exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, e) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                        .anyRequest().authenticated();
+                 }).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) ->
+                        {
+                            System.out.println("auth failed for: " + req.getRequestURI() + " method: " + req.getMethod());
+                            System.out.println("exception: " + e.getMessage());
+                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                        }))
                 .addFilterBefore(
                         new JwtAuthenticationFilter(tokenProvider, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class

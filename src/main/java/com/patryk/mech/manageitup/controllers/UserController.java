@@ -33,12 +33,18 @@ public class UserController {
     @GetMapping("/all")
     public List<UserResponse> getAllUsers() {
 
+        System.out.println("Entered /all");
+
         Iterable<User> users = userRepository.findAll();
 
-        return StreamSupport
+        List<UserResponse> responses = StreamSupport
                 .stream(users.spliterator(), false)
                 .map(UserResponse::fromUser)
                 .toList();
+
+        System.out.println("Reponse: " + responses);
+
+        return responses;
     }
 
     @GetMapping("/all/{id}")

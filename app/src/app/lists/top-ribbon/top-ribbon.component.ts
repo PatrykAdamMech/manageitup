@@ -31,6 +31,6 @@ export class TopRibbonComponent {
   }
 
   isVisible() {
-    return localStorage.getItem('manageitup_auth') === 'true'
+    return this.authService.isLoggedIn();
   }
 }

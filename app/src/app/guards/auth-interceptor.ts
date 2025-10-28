@@ -12,16 +12,30 @@ constructor(private auth: AuthService) {}
 
     const token = this.auth.token;
 
-    if (req.url.includes('/users/list')) {
-      console.debug('INTCPT /users/list token?', !!token);
+    console.debug('Intercepting request to:',req.url);
+    console.debug('Token present?:', !!token);
+    console.debug('Is logged in:', this.auth.isLoggedIn());
+
+    if (req.url.includes('/auth/login')) {
+      console.debug('Skipping auth!');
+      return next.handle(req);
     }
-
-    if (req.url.includes('/auth/login')) return next.handle(req);
-
-    if (token) {
+    if (token && this.auth.isLoggedIn()) {
+      console.debug('Adding auth header');
       req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+    } else if (token && !this.auth.isLoggedIn()) {
+      console.warn('Token exists but is expired or invalid');
     }
-    return next.handle(req);
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('HTTP Error: ', error.status, error.message);
+        if(error.status == 401) {
+          console.error('401 Unauthorized');
+          this.auth.logout();
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
 

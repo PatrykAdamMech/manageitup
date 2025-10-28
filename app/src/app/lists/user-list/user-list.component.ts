@@ -19,8 +19,14 @@ export class UserListComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.userService.findAll().subscribe(data => {
-      this.users = data;
+    this.userService.findAll().subscribe({
+      next: (data: User[]) => {
+        this.users = data;
+        console.log('Users loaded: ' + data.length);
+      },
+      error: (error: Error) => {
+        console.error('Error: ', error);
+      }
     });
   }
 
@@ -37,10 +43,8 @@ export class UserListComponent implements OnInit {
         this.userService.delete(user.id)?.subscribe(deleted => {
           console.log(deleted);
         });
+        window.location.reload();
       }
-      this.userService.findAll().subscribe(data => {
-        this.users = data;
-      });
     });
   }
 }

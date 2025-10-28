@@ -12,12 +12,12 @@ import { AuthGuard } from './guards/auth-guard.guard';
 
 const routes: Routes = [
 { path: 'home', component: HomeComponent },
-{ path: 'users/list', component: UserListComponent },
+{ path: 'users/list', component: UserListComponent, canActivate: [AuthGuard] },
 { path: 'users/login', component: LoginFormComponent },
-{ path: 'users/add', component: UserFormComponent },
-{ path: 'projects/list', component: ProjectListComponent },
-{ path: 'projects/edit/:id', component: ProjectFormComponent },
-{ path: 'projects/add', component: ProjectFormComponent },
+{ path: 'users/add', component: UserFormComponent, canActivate: [AuthGuard] },
+{ path: 'projects/list', component: ProjectListComponent, canActivate: [AuthGuard] },
+{ path: 'projects/edit/:id', component: ProjectFormComponent, canActivate: [AuthGuard] },
+{ path: 'projects/add', component: ProjectFormComponent, canActivate: [AuthGuard] },
 { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard] },
 { path: '', redirectTo: 'home', pathMatch: 'full' },
 { path: '**', redirectTo: 'home', pathMatch: 'full' }

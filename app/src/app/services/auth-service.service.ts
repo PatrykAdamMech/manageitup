@@ -30,6 +30,7 @@ constructor(private router: Router, private http: HttpClient, @Inject(API_BASE_U
   }
 
   logout() {
+    if(sessionStorage.getItem('token') != null) this.router.navigateByUrl('/users/login');
     sessionStorage.removeItem('token');
     this.loggedIn$.next(false);
   }
