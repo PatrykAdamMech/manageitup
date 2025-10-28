@@ -15,6 +15,7 @@ const routes: Routes = [
 { path: 'users/list', component: UserListComponent, canActivate: [AuthGuard] },
 { path: 'users/login', component: LoginFormComponent },
 { path: 'users/add', component: UserFormComponent, canActivate: [AuthGuard] },
+{ path: 'users/edit/:id', component: UserFormComponent, canActivate: [AuthGuard] },
 { path: 'projects/list', component: ProjectListComponent, canActivate: [AuthGuard] },
 { path: 'projects/edit/:id', component: ProjectFormComponent, canActivate: [AuthGuard] },
 { path: 'projects/add', component: ProjectFormComponent, canActivate: [AuthGuard] },

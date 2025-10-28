@@ -47,4 +47,9 @@ export class UserListComponent implements OnInit {
       }
     });
   }
+
+  editUser(user: User, e?: MouseEvent) {
+    e?.stopPropagation();
+    this.router.navigate(['/users/edit/', user.id]);
+  }
 }

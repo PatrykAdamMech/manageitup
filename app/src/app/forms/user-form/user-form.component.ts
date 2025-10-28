@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user-service.service';
 import { User, UserRoles } from '../../model/user';
@@ -35,6 +35,29 @@ export class UserFormComponent {
               private router: Router,
               private userService: UserService) {
 
+  }
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      console.log("params: " + params);
+      const id = params.get('id');
+      if(id) {
+        this.userId = id;
+        this.isEdit = true;
+        this.userService.findById(id).subscribe(user => {
+          this.mainFormGroup.patchValue({
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            lastName: user.lastName,
+            role: user.role
+          });
+        });
+      }
+      else {
+        this.isEdit = false;
+      }
+    });
   }
 
   onSubmit() {
