@@ -45,6 +45,8 @@ export class UserFormComponent {
         this.userId = id;
         this.isEdit = true;
         this.userService.findById(id).subscribe(user => {
+          this.mainFormGroup.get('password')?.clearValidators();
+          console.log(this.mainFormGroup.get('password'));
           this.mainFormGroup.patchValue({
             username: user.username,
             email: user.email,
@@ -52,6 +54,7 @@ export class UserFormComponent {
             lastName: user.lastName,
             role: user.role
           });
+          this.mainFormGroup.get('password')?.updateValueAndValidity();
         });
       }
       else {

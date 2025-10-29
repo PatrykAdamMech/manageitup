@@ -2,8 +2,12 @@ package com.patryk.mech.manageitup.models.project.DTO;
 
 import com.patryk.mech.manageitup.models.User;
 
+import java.util.Objects;
+import java.util.UUID;
+
 public class UserCreateRequest {
 
+    private UUID id;
     private String username;
     private String password;
     private String email;
@@ -60,6 +64,14 @@ public class UserCreateRequest {
 
     public void setRole(User.UserRoles role) {
         this.role = role;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public User asUser() {

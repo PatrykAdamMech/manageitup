@@ -36,7 +36,7 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private base: string
   }
 
   public update(user: UserCreateRequest) {
-    return this.http.put(this.usersUrl + '/add', user, { responseType: 'text' });
+    return this.http.put(this.usersUrl + '/update', user, { responseType: 'text' });
   }
 
   public delete(id: string | null) {

@@ -6,6 +6,7 @@ import com.patryk.mech.manageitup.models.project.DTO.UserCreateRequest;
 import com.patryk.mech.manageitup.models.project.DTO.UserOptionProjection;
 import com.patryk.mech.manageitup.models.project.DTO.UserResponse;
 import com.patryk.mech.manageitup.repositories.UserRepository;
+import com.patryk.mech.manageitup.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,16 +25,20 @@ import java.util.stream.StreamSupport;
 @Tag(name = "User Management", description = "APIs for managing users")
 public class UserController {
 
-    @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
     private UserRepository userRepository;
+
+    private UserService service;
+
+    public UserController(UserService service, UserRepository userRepository, PasswordEncoder encoder) {
+        this.service = service;
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+    }
 
     @GetMapping("/all")
     public List<UserResponse> getAllUsers() {
-
-        System.out.println("Entered /all");
 
         Iterable<User> users = userRepository.findAll();
 
@@ -41,9 +46,6 @@ public class UserController {
                 .stream(users.spliterator(), false)
                 .map(UserResponse::fromUser)
                 .toList();
-
-        System.out.println("Reponse: " + responses);
-
         return responses;
     }
 
@@ -81,9 +83,22 @@ public class UserController {
     @PostMapping("/add")
     public ResponseEntity<String> saveUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
-            user.setPassword(encoder.encode(user.getPassword()));
 
             UUID savedId = userRepository.save(user.asUser()).getId();
+
+            return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@RequestBody UserCreateRequest user) {
+        if(user != null) {
+            if(Objects.isNull(user.getId()))
+                return new ResponseEntity<String>("Missing ID!", HttpStatus.BAD_REQUEST);
+
+            UUID savedId = service.saveUserFromRequest(user).getId();
 
             return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);
         }
@@ -96,17 +111,6 @@ public class UserController {
         User foundUser = userRepository.findById(id).orElse(null);
         if(foundUser != null) {
             userRepository.delete(foundUser);
-            return new ResponseEntity<String>("OK!", HttpStatus.OK);
-        }
-
-        return new ResponseEntity<String>("Not Found!", HttpStatus.NOT_FOUND);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody User user) {
-        User foundUser = userRepository.findById(user.getId()).orElse(null);
-        if(foundUser != null) {
-            userRepository.save(user);
             return new ResponseEntity<String>("OK!", HttpStatus.OK);
         }
 
