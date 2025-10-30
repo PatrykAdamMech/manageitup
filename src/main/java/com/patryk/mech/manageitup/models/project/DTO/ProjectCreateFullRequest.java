@@ -6,6 +6,7 @@ import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.models.project.DTO.WorkflowCreateRequest;
+import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class ProjectCreateFullRequest {
     private List<ProjectParticipantCreateRequest> participants;
     private LocalDate startDate;
     private LocalDate endDate;
+    private UUID statusId;
 
     public UUID getId() {
         return id;
@@ -79,6 +81,14 @@ public class ProjectCreateFullRequest {
         this.participants = participants;
     }
 
+    public UUID getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(UUID status) {
+        this.statusId = status;
+    }
+
     public ProjectCreateFullRequest() {}
 
     @Override
@@ -90,6 +100,7 @@ public class ProjectCreateFullRequest {
                 ", participants=" + participants +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", statusId=" + statusId +
                 '}';
     }
 }

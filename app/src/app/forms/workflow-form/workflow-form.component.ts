@@ -82,7 +82,7 @@ export class WorkflowFormComponent {
   private createStatusRow(init?: { nameValue?: StatusValue; priority?: number }): FormGroup {
     const g = this.fb.group({
       // Single field: can be free text (new name) or ProjectStatusOption (existing)
-      name: this.fb.control<StatusValue>('', Validators.required),
+      name: this.fb.control<StatusValue>('', [Validators.required, Validators.min(1), Validators.max(9)]),
       priority: this.fb.control<number>(init?.priority ?? 9),
     });
 

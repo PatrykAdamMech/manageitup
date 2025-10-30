@@ -27,6 +27,19 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+
+    <mat-form-field *ngIf="isEdit">
+      <mat-label>Current status</mat-label>
+      <mat-select
+        formControlName="currentStatus"
+        [compareWith]="compareStatus"
+        (selectionChange)="onStatusSelected($event)">
+        <ng-container *ngFor="let s of statusesToDisplay">
+          <mat-option [value]="s">{{ s.name }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+
     <mat-form-field>
       <mat-label>Project start date</mat-label>
       <input matInput

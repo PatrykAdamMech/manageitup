@@ -1,4 +1,5 @@
 import { Workflow } from '../workflow';
+import { ProjectStatus } from '../project-status';
 import { ProjectParticipantCreateRequest } from './project-participant-create-request';
 
 export class ProjectCreateRequest {
@@ -9,6 +10,7 @@ export class ProjectCreateRequest {
   ownerId: string;
   startDate: Date | string;
   endDate: Date | string;
+  statusId: string | null;
 
   constructor(pcr: Partial<ProjectCreateRequest> = {}) {
     this.id = pcr?.id || null;
@@ -18,5 +20,6 @@ export class ProjectCreateRequest {
     this.participants = pcr?.participants || [];
     this.startDate = pcr?.startDate || new Date('2000-01-01');
     this.endDate = pcr?.endDate || new Date('2000-01-01');
+    this.statusId = pcr?.statusId || null;
   }
 }

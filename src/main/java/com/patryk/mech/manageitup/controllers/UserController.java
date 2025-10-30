@@ -83,7 +83,7 @@ public class UserController {
     @PostMapping("/add")
     public ResponseEntity<String> saveUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
-
+            user.setPassword(encoder.encode(user.getPassword()));
             UUID savedId = userRepository.save(user.asUser()).getId();
 
             return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);

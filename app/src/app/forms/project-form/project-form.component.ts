@@ -21,6 +21,7 @@ import { ProjectStatusService } from  '../../services/project-status-service.ser
 import { ProjectService } from  '../../services/project-service.service';
 import { Observable, of, BehaviorSubject, forkJoin  } from 'rxjs';
 import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule, MatSelectChange } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WorkflowFormComponent } from '../../forms/workflow-form/workflow-form.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -72,6 +73,7 @@ export class ProjectFormComponent implements OnInit {
   ownerCtrl = new FormControl<UserOption | string>('', Validators.required);
   workflowCtrl = new FormControl<WorkflowOption | string>('', Validators.required);
   participantCtrl = new FormControl<ProjectParticipant[]>([], { nonNullable: true })
+  currentStatusCtrl = new FormControl<ProjectStatus | null>(null, Validators.required)
 
   // storing values for the actual POST request
   userOptions: UserOption[] = [];
@@ -81,6 +83,7 @@ export class ProjectFormComponent implements OnInit {
   participants: ProjectParticipant[] = [];
   pendingParticipants: ParticipantPayload[] = [];
   statusesToDisplay: ProjectStatus[] = [];
+  currentStatus: ProjectStatus | null = null;
 
   mainFormGroup = new FormGroup({
     title: this.titleControl,
@@ -88,7 +91,8 @@ export class ProjectFormComponent implements OnInit {
     endDate: this.endDateControl,
     owner: this.ownerCtrl,
     workflow: this.workflowCtrl,
-    participants: this.participantCtrl
+    participants: this.participantCtrl,
+    currentStatus: this.currentStatusCtrl
   });
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -101,6 +105,9 @@ export class ProjectFormComponent implements OnInit {
   displayWorkflow = (w?: WorkflowOption | string) =>
   typeof w === 'string' ? w : (w?.label ?? '');
   trackWorkflowById = (_: number, w: WorkflowOption) => w.id;
+
+  compareStatus = (a: ProjectStatus | null, b: ProjectStatus | null) =>
+  a && b ? a.id === b.id : a === b;
 
   readonly dialog = inject(MatDialog);
 
@@ -153,24 +160,36 @@ export class ProjectFormComponent implements OnInit {
         if(id) {
           this.projectId = id;
           this.isEdit = true;
+
           this.projectService.findById(id).subscribe(project => {
+              console.log(JSON.stringify(project, null, 4));
+
+              this.workflow = project.workflow ?? null;
+              this.statusesToDisplay = project.workflow?.statuses ?? [];
+
               this.mainFormGroup.patchValue({
                 title: project.title,
                 startDate: project.startDate,
                 endDate: project.endDate,
                 owner: this.buildLabel(project.owner?.name, project.owner?.lastName),
                 workflow: project.workflow?.name,
-                participants: project.participants
+                participants: project.participants,
+                currentStatus: project.currentStatus
             });
             this.owner = project.owner ?? null;
-            this.workflow = project.workflow ?? null;
-            this.statusesToDisplay = project.workflow?.statuses ?? [];
             this.participants = project.participants ?? [];
+            this.currentStatus = project.currentStatus ?? null;
+            if(this.statusesToDisplay) {
+              this.mainFormGroup.get('currentStatus')?.clearValidators();
+              this.mainFormGroup.get('currentStatus')?.updateValueAndValidity();
+            }
           });
 
         }
         else {
           this.isEdit = false;
+          this.mainFormGroup.get('currentStatus')?.clearValidators();
+          this.mainFormGroup.get('currentStatus')?.updateValueAndValidity();
         }
     });
   }
@@ -206,14 +225,21 @@ export class ProjectFormComponent implements OnInit {
 
   onWorkflowSelected(e: MatAutocompleteSelectedEvent) {
     const w = e.option.value as WorkflowOption;
+    console.log(JSON.stringify(w, null, 2));
     this.mainFormGroup.get('workflow')!.setValue(w);
     this.workflowCtrl.setValue({ id: w.id, label: w.label }, { emitEvent: false });
 
     if(w.id) {
       const workflow = this.workflowService.findById(w.id).subscribe(workflow => {
         this.workflow = workflow;
+        this.statusesToDisplay = workflow.statuses.sort(this.sortStatuses);
       });
     }
+  }
+
+  onStatusSelected(e: MatSelectChange) {
+    const s = e.value as ProjectStatus;
+    this.currentStatus = s;
   }
 
   addParticipant() {
@@ -300,9 +326,6 @@ export class ProjectFormComponent implements OnInit {
     const startDate = this.mainFormGroup.get('startDate')?.value;
     const endDate = this.mainFormGroup.get('endDate')?.value;
     const title = this.mainFormGroup.get('title')?.value;
-    const ownerId = this.owner?.id;
-    const workflow = this.workflow;
-    const participants = this.participants;
 
     const finalProject = new ProjectCreateRequest();
 
@@ -314,18 +337,32 @@ export class ProjectFormComponent implements OnInit {
     finalProject.startDate = convStartDate ? convStartDate : new Date('2000-01-01');
     finalProject.endDate = convEndDate ? convEndDate : new Date('2000-01-01');
     finalProject.title = title ? title : 'Default title';
-    finalProject.ownerId = ownerId  ? ownerId : '';
-    finalProject.workflow = this.normalizeWorkflow(workflow);
+    finalProject.ownerId = this.owner?.id  ??  '';
+    finalProject.workflow = this.normalizeWorkflow(this.workflow);
 
-    for(let ps of workflow?.statuses ?? []) {
+    for(let ps of this.workflow?.statuses ?? []) {
         finalProject.workflow.statuses.push(this.normalizeStatuses(ps));
     }
 
+    if(this.workflow?.statuses) finalProject.statusId = this.workflow.statuses[0].id;
+
     finalProject.participants = [];
 
-    for(let pp of participants ?? []) {
+    for(let pp of this.participants ?? []) {
         finalProject.participants.push(this.normalizeParticipants(pp));
     }
+
+
+    return finalProject;
+
+  }
+
+  private prepareProjectForPut(): ProjectCreateRequest {
+
+    const finalProject = this.prepareProjectForPost();
+    finalProject.id = this.projectId;
+
+    if(this.currentStatus) finalProject.statusId = this.currentStatus.id;
 
     return finalProject;
 
@@ -384,13 +421,13 @@ export class ProjectFormComponent implements OnInit {
   }
 
   save() {
-    const body = this.prepareProjectForPost();
+
     if(this.mainFormGroup.invalid) {
       alert('Please fill in all mandatory field!');
       return;
     }
-
     if(this.isEdit) {
+      const body = this.prepareProjectForPut();
       console.log('Prepared PUT body' + JSON.stringify(body, null, 4));
       this.projectService.update(body).subscribe({
         next: (res) => {
@@ -403,6 +440,7 @@ export class ProjectFormComponent implements OnInit {
         }
       });
     } else {
+      const body = this.prepareProjectForPost();
       console.log('Prepared POST body' + JSON.stringify(body, null, 4));
       this.projectService.save(body).subscribe({
         next: (res) => {

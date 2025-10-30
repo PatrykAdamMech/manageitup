@@ -1,10 +1,12 @@
 import { ProjectParticipant } from './project-participant';
+import { ProjectStatus } from './project-status';
 import { Workflow } from './workflow';
 import { User } from '../user';
 
 export class Project {
   id: string | null;
   title: string;
+  currentStatus: ProjectStatus | null;
   owner: User | null;
   workflow: Workflow | null;
   participants: Array<ProjectParticipant>;
@@ -15,6 +17,7 @@ export class Project {
   constructor(project: Partial<Project> = {}) {
     this.id = project?.id || null;
     this.title = project?.title || '';
+    this.currentStatus = project?.currentStatus || null;
     this.owner = project?.owner || null;
     this.workflow = project?.workflow || null;
     this.participants = project?.participants || [];

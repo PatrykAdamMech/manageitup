@@ -35,6 +35,7 @@ public class ProjectResponse {
         this.setLastUpdatedTimestamp(project.getLastUpdatedTimestamp());
         this.setStartDate(project.getStartDate());
         this.setEndDate(project.getEndDate());
+        this.setCurrentStatus(ProjectStatusResponse.fromStatus(project.getStatus()));
     }
 
     public UUID getId() {

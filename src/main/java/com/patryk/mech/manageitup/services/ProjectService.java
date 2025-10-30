@@ -3,15 +3,19 @@ package com.patryk.mech.manageitup.services;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantCreateRequest;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectStatusResponse;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
+import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import com.patryk.mech.manageitup.repositories.ProjectParticipantRepository;
 import com.patryk.mech.manageitup.repositories.ProjectRepository;
+import com.patryk.mech.manageitup.repositories.ProjectStatusRepository;
 import com.patryk.mech.manageitup.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 
 import java.util.*;
 import java.util.function.Function;
@@ -21,13 +25,15 @@ import java.util.stream.Collectors;
 public class ProjectService {
 
     private ProjectRepository projectRepository;
+    private ProjectStatusRepository psRepository;
     private ProjectParticipantRepository ppRepository;
     private WorkflowService workflowService;
     private UserRepository userRepository;
     private EntityManager em;
 
-    public ProjectService(ProjectRepository projectRepository, EntityManager em, WorkflowService workflowService, ProjectParticipantRepository ppRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectStatusRepository psRepository, EntityManager em, WorkflowService workflowService, ProjectParticipantRepository ppRepository) {
         this.projectRepository = projectRepository;
+        this.psRepository = psRepository;
         this.em = em;
         this.workflowService = workflowService;
         this.ppRepository = ppRepository;
@@ -73,6 +79,11 @@ public class ProjectService {
                 existing.getParticipants().add(newPP); // IMPORTANT — mutate existing collection
             }
 
+            if(Objects.nonNull(request.getStatusId())) {
+                ProjectStatus s = em.getReference(ProjectStatus.class, request.getStatusId());
+                existing.setStatus(s);
+            }
+
             // Save managed entity
             return projectRepository.save(existing);
         } else {
@@ -98,6 +109,11 @@ public class ProjectService {
 
         User u = em.getReference(User.class, request.getOwnerId());
         finalProject.setOwner(u);
+
+        if(Objects.nonNull(request.getStatusId())) {
+            ProjectStatus s = em.getReference(ProjectStatus.class, request.getStatusId());
+            finalProject.setStatus(s);
+        }
 
         finalProject.setWorkflow(workflowService.
                 requestToWorkflow(request.getWorkflow()));

@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 export class ProjectListComponent implements OnInit {
 
   projects: Project[] = [];
-  columnsToDisplay: string[] = ['id', 'title', 'owner', 'workflow', 'participants', 'startDate', 'endDate'];
+  columnsToDisplay: string[] = ['id', 'title', 'currentStatus', 'owner', 'workflow', 'participants', 'startDate', 'endDate'];
   readonly dialog = inject(MatDialog);
 
   constructor(private projectService: ProjectService, private router: Router) {}
