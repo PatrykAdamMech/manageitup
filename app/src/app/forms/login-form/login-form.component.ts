@@ -16,11 +16,15 @@ constructor(private router: Router, private authService: AuthService) {}
 
   onSubmit() {
       this.authService.login(this.loginModel).subscribe({
-      next: () => this.router.navigateByUrl('/admin-panel'),
+      next: () => this.router.navigate(['users/dashboard']),
       error: error => {
         console.error(error);
         alert('Login failed: server error!');
       }
     });
+  }
+
+  isAdmin() {
+    return true;
   }
 }

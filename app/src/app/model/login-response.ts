@@ -1,14 +1,14 @@
-export type LoginResultEnum = 'NOT_REGISTERED' | 'WRONG_PASSWORD' | 'SUCCESSFUL';
+import { UserRoles } from './user';
 
 export class LoginResponseComponent {
-  logged: boolean;
   accessToken: string;
   tokenType: string;
-  result: string;
+  role: UserRoles;
+  userId: string;
 
   constructor(loginResponse: Partial<LoginResponseComponent> = {}) {
-    this.logged = loginResponse?.logged || false;
-    this.result = loginResponse?.result || 'NOT_REGISTERED';
+    this.role = loginResponse?.role || UserRoles.USER;
+    this.userId = loginResponse?.userId || '';
     this.accessToken = loginResponse?.accessToken || '';
     this.tokenType = loginResponse?.tokenType || '';
   }

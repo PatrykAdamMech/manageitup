@@ -4,6 +4,7 @@ import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantCreateRequest;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectStatusResponse;
+import com.patryk.mech.manageitup.models.project.DTO.ProjectStatusUpdateRequest;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
@@ -128,6 +129,18 @@ public class ProjectService {
         finalProject.setParticipants(pps);
 
         return finalProject;
+    }
+
+    @Transactional
+    public Project saveStatusUpdate(ProjectStatusUpdateRequest psur) {
+        Project fetchedProject = projectRepository.findById(psur.getProjectId())
+                .orElseThrow(() -> new EntityNotFoundException("Project not found! ID: " + psur.getProjectId()));
+
+        ProjectStatus fetchedStatus = psRepository.findById(psur.getStatusId())
+                .orElseThrow(() -> new EntityNotFoundException("Status not found! ID: " + psur.getStatusId()));
+        fetchedProject.setStatus(fetchedStatus);
+
+        return projectRepository.save(fetchedProject);
     }
 
 }

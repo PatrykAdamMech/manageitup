@@ -6,6 +6,7 @@ import com.patryk.mech.manageitup.models.login.LoginResult;
 import com.patryk.mech.manageitup.repositories.UserRepository;
 import com.patryk.mech.manageitup.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,8 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
             String token = tokenProvider.generateToken(auth);
-            return ResponseEntity.ok(new LoginResult(token));
+            User user = users.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found!: " + loginRequest.getEmail()));
+            return ResponseEntity.ok(new LoginResult(token, user.getRole(), user.getId()));
         } catch (org.springframework.security.core.AuthenticationException ex) {
             System.out.println("Login failed for " + loginRequest.getEmail() + ": " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

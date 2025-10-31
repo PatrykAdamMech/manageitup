@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../model/project/project';
 import { ProjectCreateRequest } from '../model/project/requests/project-create-request';
+import { ProjectUpdateStatus } from '../model/project/requests/project-update-status-request';
 import { API_BASE_URL } from '../tokens';
 
 @Injectable()
@@ -22,12 +23,25 @@ export class ProjectService {
     return this.http.get<Project>(this.projectsUrl + '/all/' + id);
   }
 
+  public findByOwnerId(id: string): Observable<Project[]> {
+      return this.http.get<Project[]>(this.projectsUrl + '/all/user/owner/' + id);
+  }
+
+  public findByParticipantId(id: string): Observable<Project[]> {
+      return this.http.get<Project[]>(this.projectsUrl + '/all/user/participant/' + id);
+  }
+
+
   public save(pcr: ProjectCreateRequest) {
     return this.http.post(this.projectsUrl + '/add/full', pcr, { responseType: 'text' });
   }
 
   public update(pcr: ProjectCreateRequest) {
     return this.http.put(this.projectsUrl + '/update/full', pcr, { responseType: 'text' });
+  }
+
+  public updateStatus(pus: ProjectUpdateStatus) {
+    return this.http.put(this.projectsUrl + '/update/status', pus, { responseType: 'text' });
   }
 
   public delete(id: string | null) {

@@ -1,5 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Input } from '@angular/core';
 import { Project } from '../../model/project/project';
+import { ProjectStatus } from '../../model/project/project-status';
+import { ProjectUpdateStatus } from '../../model/project/requests/project-update-status-request';
 import { Workflow } from '../../model/project/workflow';
 import { UserDisplayComponent } from '../../model/user-display/user-display.component';
 import { ProjectService } from '../../services/project-service.service';
@@ -7,7 +9,8 @@ import { ParticipantsListDialogComponent } from '../participants-list-dialog/par
 import { WorlflowDialogComponent } from '../worlflow-dialog/worlflow-dialog.component';
 import { DeleteConfirmDialogComponent } from '../../forms/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-project-list',
@@ -16,19 +19,30 @@ import { Router } from '@angular/router';
 })
 export class ProjectListComponent implements OnInit {
 
+  @Input() displayAdmin: boolean = true;
+  @Input() userId: string | null = null;
+
+  statusFormCtrl = new FormControl<string | null>(null, Validators.required);
+
+  editable: boolean = false;
   projects: Project[] = [];
+  statusesToDisplay: ProjectStatus[] = [];
   columnsToDisplay: string[] = ['id', 'title', 'currentStatus', 'owner', 'workflow', 'participants', 'startDate', 'endDate'];
   readonly dialog = inject(MatDialog);
+  editedProjectId: string | null = null;
 
-  constructor(private projectService: ProjectService, private router: Router) {}
+  constructor(private projectService: ProjectService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    this.projectService.findAllProjects().subscribe( data => {
-      this.projects = data;
-    });
-  }
-
-  click() {
+    if(this.userId) {
+      this.projectService.findByOwnerId(this.userId).subscribe( data => {
+        this.projects = data;
+      });
+    } else {
+      this.projectService.findAllProjects().subscribe( data => {
+        this.projects = data;
+      });
+    }
   }
 
   deleteProject(project: Project, e?: MouseEvent) {
@@ -86,6 +100,38 @@ export class ProjectListComponent implements OnInit {
   editProject(project: Project, e?: MouseEvent  ) {
     e?.stopPropagation();
     this.router.navigate(['/projects/edit/', project.id]);
+  }
+
+  setEditableStatus(project: Project, e?: MouseEvent  ) {
+    e?.stopPropagation();
+    this.editable = true;
+    this.editedProjectId = project.id ?? null;
+    this.statusesToDisplay = project.workflow?.statuses ?? [];
+    this.statusFormCtrl.setValue(project.currentStatus?.id ?? null, { emitEvent: false });
+  }
+
+  saveStatus(project: Project) {
+    const statusId = this.statusFormCtrl.value;
+    if (!statusId) return;
+    if(!this.editedProjectId) return;
+
+    const createRequest = new ProjectUpdateStatus();
+    createRequest.projectId = this.editedProjectId;
+    createRequest.statusId = statusId;
+
+    this.projectService.updateStatus(createRequest).subscribe(result => {
+      console.log('Updated: ' + result);
+    });
+    window.location.reload();
+  }
+
+  onStatusPicked(project: Project, e?: MouseEvent) {
+    // possible extension
+  }
+
+  cancelStatusEdit() {
+    this.editable = false;
+    this.statusFormCtrl.reset(null, { emitEvent: false });
   }
 
 }

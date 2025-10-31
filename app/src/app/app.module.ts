@@ -52,6 +52,7 @@ import { DeleteConfirmDialogComponent } from './forms/delete-confirm-dialog/dele
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './guards/auth-interceptor';
 import { AuthService  } from './services/auth-service.service';
+import { UserDashboardComponent } from './lists/user-dashboard/user-dashboard.component';
 
 export function initAuth(auth: AuthService) {
   // triggers constructor logic and returns a resolved promise
@@ -82,7 +83,8 @@ export function initAuth(auth: AuthService) {
     ProjectParticipantFormComponent,
     ProjectParticipantListComponent,
     ProjectStatusListComponent,
-    DeleteConfirmDialogComponent
+    DeleteConfirmDialogComponent,
+    UserDashboardComponent
   ],
   imports: [
     BrowserModule,

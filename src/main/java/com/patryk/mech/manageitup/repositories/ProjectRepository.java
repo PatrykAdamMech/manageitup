@@ -11,10 +11,17 @@ import java.util.UUID;
 
 public interface ProjectRepository extends CrudRepository<Project, UUID> {
 
-    @EntityGraph("Project.withAll")
+    final String GRAPH_ALL = "Project.withAll";
+
+    @EntityGraph(GRAPH_ALL)
     List<Project> findAll();
 
-    @EntityGraph("Project.withAll")
+    @EntityGraph(GRAPH_ALL)
     Optional<Project> findById(UUID id);
 
+    @EntityGraph(GRAPH_ALL)
+    List<Project> findByOwner_Id(UUID userId);
+
+    @EntityGraph(GRAPH_ALL)
+    List<Project> findDistinctByParticipants_User_Id(UUID userId);
 }

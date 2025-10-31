@@ -28,4 +28,5 @@ public interface UserRepository extends CrudRepository<User, UUID> {
     Page<UserOptionProjection> findAllOptionsBy(Pageable pageable);
 
     Page<User> findAll(Pageable pageable);
+
 }

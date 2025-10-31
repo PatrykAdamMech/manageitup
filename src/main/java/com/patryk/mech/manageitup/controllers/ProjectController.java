@@ -2,25 +2,23 @@ package com.patryk.mech.manageitup.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.patryk.mech.manageitup.models.common.GenericOptionsResponse;
-import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
-import com.patryk.mech.manageitup.models.project.DTO.ProjectParticipantResponse;
-import com.patryk.mech.manageitup.models.project.DTO.ProjectResponse;
+import com.patryk.mech.manageitup.models.project.DTO.*;
 import com.patryk.mech.manageitup.models.project.Project;
-import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateRequest;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
+import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import com.patryk.mech.manageitup.repositories.ProjectRepository;
 import com.patryk.mech.manageitup.services.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
@@ -59,6 +57,30 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @GetMapping("/all/user/owner/{id}")
+    public ResponseEntity<Set<ProjectResponse>> getProjectByUserId(@PathVariable UUID id) {
+        Set<ProjectResponse> responses = projectRepository.findByOwner_Id(id)
+                .stream().map(ProjectResponse::new)
+                .collect(Collectors.toSet());
+
+        if(!responses.isEmpty()) {
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("/all/user/participant/{id}")
+    public ResponseEntity<Set<ProjectResponse>> getProjectByParticipantId(@PathVariable UUID id) {
+        Set<ProjectResponse> responses = projectRepository.findDistinctByParticipants_User_Id(id)
+                .stream().map(ProjectResponse::new)
+                .collect(Collectors.toSet());
+
+        if(!responses.isEmpty()) {
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     @PostMapping("/add")
     public ResponseEntity<String> addProject(@RequestBody ProjectCreateRequest request) {
         if(request != null) {
@@ -89,14 +111,20 @@ public class ProjectController {
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
+    @PutMapping("/update/status")
+    public ResponseEntity<String> updateProjectStatus(@RequestBody ProjectStatusUpdateRequest request) {
+        if(request != null) {
+            UUID savedProject = projectService.saveStatusUpdate(request).getId();
+
+            return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> removeProject(@PathVariable UUID id) {
         Project project = projectRepository.findById(id).orElse(null);
         if(project == null) ResponseEntity.status(HttpStatus.NO_CONTENT).body("Project not found!");
-
-//        project.setWorkflow(null);
-//        project.setOwner(null);
-//        project.setParticipants(null);
 
         projectRepository.deleteById(id);
 

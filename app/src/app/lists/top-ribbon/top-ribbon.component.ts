@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 })
 export class TopRibbonComponent {
 
-
-
   constructor(private location: Location, private router: Router, public authService: AuthService) {}
 
   goBack() {
@@ -26,11 +24,19 @@ export class TopRibbonComponent {
     this.router.navigate(['/admin-panel']);
   }
 
+  goDashboard() {
+    this.router.navigate(['/users/dashboard']);
+  }
+
   logout() {
     this.authService.logout();
   }
 
-  isVisible() {
+  isVisibleUser() {
     return this.authService.isLoggedIn();
+  }
+
+  isVisibleAdmin() {
+    return this.authService.isAdmin();
   }
 }
