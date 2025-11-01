@@ -1,6 +1,7 @@
 import { ProjectParticipant } from './project-participant';
 import { ProjectStatus } from './project-status';
 import { Workflow } from './workflow';
+import { Task } from './task';
 import { User } from '../user';
 
 export class Project {
@@ -12,6 +13,7 @@ export class Project {
   participants: Array<ProjectParticipant>;
   startDate: Date | null;
   endDate: Date | null;
+  tasks: Array<Task>;
 
 
   constructor(project: Partial<Project> = {}) {
@@ -23,5 +25,6 @@ export class Project {
     this.participants = project?.participants || [];
     this.startDate = project?.startDate || null;
     this.endDate = project?.endDate || null;
+    this.tasks = project?.tasks || [];
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Input } from '@angular/core';
+import { Component, OnInit, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Project } from '../../model/project/project';
 import { ProjectStatus } from '../../model/project/project-status';
 import { ProjectUpdateStatus } from '../../model/project/requests/project-update-status-request';
@@ -9,6 +9,7 @@ import { ParticipantsListDialogComponent } from '../participants-list-dialog/par
 import { WorlflowDialogComponent } from '../worlflow-dialog/worlflow-dialog.component';
 import { DeleteConfirmDialogComponent } from '../../forms/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -27,9 +28,12 @@ export class ProjectListComponent implements OnInit {
   editable: boolean = false;
   projects: Project[] = [];
   statusesToDisplay: ProjectStatus[] = [];
-  columnsToDisplay: string[] = ['id', 'title', 'currentStatus', 'owner', 'workflow', 'participants', 'startDate', 'endDate'];
+  columnsToDisplay: string[] = ['id', 'title', 'currentStatus', 'owner', 'workflow', 'participants', 'startDate', 'endDate', 'tasks'];
+  columnsToDisplayTasks: string[] = ['id', 'name', 'assignee', 'status', 'description'];
   readonly dialog = inject(MatDialog);
   editedProjectId: string | null = null;
+  expanded: boolean = false;
+  expandedProjectIds: Array<string> = [];
 
   constructor(private projectService: ProjectService, private route: ActivatedRoute, private router: Router) {}
 
@@ -131,7 +135,17 @@ export class ProjectListComponent implements OnInit {
 
   cancelStatusEdit() {
     this.editable = false;
+    this.editedProjectId = '';
     this.statusFormCtrl.reset(null, { emitEvent: false });
+  }
+
+  expandProject(project: Project) {
+    const index = this.expandedProjectIds.indexOf(project.id ?? '');
+    if(index == -1) {
+      this.expandedProjectIds.push(project.id ?? '');
+    } else {
+      this.expandedProjectIds = this.expandedProjectIds.filter(id => id != project.id);
+    }
   }
 
 }

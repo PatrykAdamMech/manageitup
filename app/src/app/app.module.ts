@@ -53,6 +53,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './guards/auth-interceptor';
 import { AuthService  } from './services/auth-service.service';
 import { UserDashboardComponent } from './lists/user-dashboard/user-dashboard.component';
+import { TaskListComponent } from './lists/task-list/task-list.component';
 
 export function initAuth(auth: AuthService) {
   // triggers constructor logic and returns a resolved promise
@@ -84,7 +85,8 @@ export function initAuth(auth: AuthService) {
     ProjectParticipantListComponent,
     ProjectStatusListComponent,
     DeleteConfirmDialogComponent,
-    UserDashboardComponent
+    UserDashboardComponent,
+    TaskListComponent
   ],
   imports: [
     BrowserModule,

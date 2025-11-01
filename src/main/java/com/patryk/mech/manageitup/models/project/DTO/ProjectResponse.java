@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ProjectResponse {
@@ -21,6 +22,7 @@ public class ProjectResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private ProjectStatusResponse currentStatus;
+    private Set<TaskResponse> tasks;
 
     public ProjectResponse() {
     }
@@ -36,6 +38,7 @@ public class ProjectResponse {
         this.setStartDate(project.getStartDate());
         this.setEndDate(project.getEndDate());
         this.setCurrentStatus(ProjectStatusResponse.fromStatus(project.getStatus()));
+        this.setTasks(TaskResponse.fromTaskList(project.getTasks()));
     }
 
     public UUID getId() {
@@ -116,6 +119,14 @@ public class ProjectResponse {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Set<TaskResponse> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<TaskResponse> tasks) {
+        this.tasks = tasks;
     }
 
     public static ProjectResponse fromProject(Project project) {

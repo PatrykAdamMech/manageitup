@@ -30,11 +30,11 @@ public class Task {
             this.progress = progress;
         }
 
-        String getLabel() {
+        public String getLabel() {
             return this.label;
         }
 
-        int getProgress() {
+        public int getProgress() {
             return this.progress;
         }
     }

@@ -2,16 +2,14 @@ package com.patryk.mech.manageitup.models.project.DTO;
 
 import com.patryk.mech.manageitup.models.project.Task;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class TaskResponse {
 
     private UUID id;
     private String name;
     private ProjectParticipantResponse assignee;
-    private Task.TaskStatus status;
+    private String status;
     private String description;
     private UUID projectId;
 
@@ -21,7 +19,7 @@ public class TaskResponse {
     public TaskResponse(Task task) {
         this.id = task.getId();
         this.name = task.getName();
-        this.status = task.getStatus();
+        this.status = task.getStatus().getLabel();
         this.assignee = ProjectParticipantResponse.fromProjectParticipant(task.getAssignee());
         this.description = task.getDescription();
         this.projectId = task.getProject().getId();
@@ -59,11 +57,11 @@ public class TaskResponse {
         this.description = description;
     }
 
-    public Task.TaskStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Task.TaskStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -79,9 +77,9 @@ public class TaskResponse {
         return task == null ? null : new TaskResponse(task);
     }
 
-    public static List<TaskResponse> fromTaskList(List<Task> tasks) {
+    public static Set<TaskResponse> fromTaskList(Set<Task> tasks) {
         if(tasks == null) return null;
-        List<TaskResponse> responses = new ArrayList<>();
+        Set<TaskResponse> responses = new HashSet<>();
         for(Task task: tasks) {
             responses.add(fromTask(task));
         }
