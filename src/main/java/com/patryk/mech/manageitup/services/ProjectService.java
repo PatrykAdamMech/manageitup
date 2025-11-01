@@ -100,10 +100,6 @@ public class ProjectService {
 
         System.out.println("REQUEST: " + request);
 
-        if(Objects.nonNull(request.getId())) {
-            finalProject.setId(request.getId());
-        }
-
         finalProject.setTitle(request.getTitle());
         finalProject.setStartDate(request.getStartDate());
         finalProject.setEndDate(request.getEndDate());

@@ -43,6 +43,7 @@ public class SecurityConfig {
             "/status/**",
             "/workflows/**",
             "/participant/**",
+            "/tasks/**",
             "/main/**",
     };
 
@@ -68,13 +69,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authorize) -> {
-                        System.out.println("config security: " + Arrays.toString(PERMIT_ALL));
-                        authorize
-                        .requestMatchers(PERMIT_ALL).permitAll()
-                        .requestMatchers(SYSTEM_ADMIN_WHITELIST).hasRole("SYSTEM_ADMIN")
-                        .anyRequest().authenticated();
-                 }).exceptionHandling(ex -> ex
+                .authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers(PERMIT_ALL).permitAll()
+                .requestMatchers(SYSTEM_ADMIN_WHITELIST).hasRole("SYSTEM_ADMIN")
+                .anyRequest().authenticated()).exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, e) ->
                         {
                             System.out.println("auth failed for: " + req.getRequestURI() + " method: " + req.getMethod());
@@ -97,17 +95,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-//        UserDetails userDetails = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password(passwordEncoder.encode("password"))
-//                .roles("SYSTEM_ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

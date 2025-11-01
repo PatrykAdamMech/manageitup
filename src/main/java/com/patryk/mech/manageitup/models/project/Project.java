@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +21,21 @@ import java.util.UUID;
                 @NamedAttributeNode("owner"),
                 @NamedAttributeNode("workflow"),
                 @NamedAttributeNode("status"),
-                @NamedAttributeNode(value = "participants", subgraph = "participants-subgraph")
+                @NamedAttributeNode(value = "participants", subgraph = "participants-subgraph"),
+                @NamedAttributeNode(value = "tasks", subgraph = "tasks-subgraph")
         },
         subgraphs = {
                 @NamedSubgraph(
                         name = "participants-subgraph",
                         attributeNodes = {
                                 @NamedAttributeNode("user")
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "tasks-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("assignee"),
+                                @NamedAttributeNode("project")
                         }
                 )
         }
@@ -70,6 +79,13 @@ public class Project {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="ProjectStatuses", referencedColumnName = "id")
     private ProjectStatus status;
+
+
+    @OneToMany(mappedBy = "project",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private Set<Task> tasks;
 
     public Project() {
         this.participants = new ArrayList<>();
@@ -159,5 +175,13 @@ public class Project {
 
     public void setStatus(ProjectStatus status) {
         this.status = status;
+    }
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 }

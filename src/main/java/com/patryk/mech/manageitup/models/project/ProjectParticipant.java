@@ -3,6 +3,7 @@ package com.patryk.mech.manageitup.models.project;
 import com.patryk.mech.manageitup.models.User;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -47,6 +48,13 @@ public final class ProjectParticipant {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @OneToMany(mappedBy = "assignee",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Task> tasks;
+
     public ProjectParticipant() {}
 
     public ProjectParticipant(ProjectRoles role, User userID, Project project) {
@@ -86,4 +94,14 @@ public final class ProjectParticipant {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+
 }
