@@ -6,15 +6,12 @@ import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import jakarta.persistence.EntityManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class ProjectCreateRequest {
 
     String title;
-    List<UUID> participants;
+    Set<UUID> participants;
     UUID workflowId;
     UUID ownerId;
 
@@ -45,11 +42,11 @@ public class ProjectCreateRequest {
         this.workflowId = workflowId;
     }
 
-    public List<UUID> getParticipants() {
+    public Set<UUID> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<UUID> participants) {
+    public void setParticipants(Set<UUID> participants) {
         this.participants = participants;
     }
 
@@ -72,7 +69,7 @@ public class ProjectCreateRequest {
                 project.setOwner(user);
             }
         }
-        List<ProjectParticipant> parts = new ArrayList<>();
+        Set<ProjectParticipant> parts = new HashSet<>();
 
         if(Objects.nonNull(this.participants)) {
             for (UUID pp : this.getParticipants()) {

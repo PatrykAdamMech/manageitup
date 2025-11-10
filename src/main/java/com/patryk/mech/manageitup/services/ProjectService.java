@@ -81,7 +81,8 @@ public class ProjectService {
             }
 
             if(Objects.nonNull(request.getStatusId())) {
-                ProjectStatus s = em.getReference(ProjectStatus.class, request.getStatusId());
+                ProjectStatus s = psRepository.findById(request.getStatusId())
+                        .orElseThrow(() -> new EntityNotFoundException("Project status not found: " + request.getStatusId()));
                 existing.setStatus(s);
             }
 
@@ -108,14 +109,15 @@ public class ProjectService {
         finalProject.setOwner(u);
 
         if(Objects.nonNull(request.getStatusId())) {
-            ProjectStatus s = em.getReference(ProjectStatus.class, request.getStatusId());
+            ProjectStatus s = psRepository.findById(request.getStatusId())
+                    .orElseThrow(() -> new EntityNotFoundException("Project status not found: " + request.getStatusId()));
             finalProject.setStatus(s);
         }
 
         finalProject.setWorkflow(workflowService.
                 requestToWorkflow(request.getWorkflow()));
 
-        List<ProjectParticipant> pps = new ArrayList<>();
+        Set<ProjectParticipant> pps = new HashSet<>();
         for(ProjectParticipantCreateRequest ppcr : request.getParticipants()) {
             ProjectParticipant pp = ppcr.asProjectParticipant(this.em);
             pp.setProject(finalProject);

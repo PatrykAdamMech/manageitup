@@ -10,8 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="mat-typography">
-  <app-top-ribbon></app-top-ribbon>
-  <app-root></app-root>
+<body class="page-bg">
+  <div class="main">
+    <header>
+      <app-top-ribbon></app-top-ribbon>
+    </header>
+    <div class="header-push"></div>
+    <div class="main-container" [style.align-items]="alignItems">
+          <app-root></app-root>
+    </div>
+    <footer>
+    </footer>
+  </div>
 </body>
 </html>

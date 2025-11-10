@@ -8,10 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="Projects")
@@ -60,7 +57,7 @@ public class Project {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private List<ProjectParticipant> participants;
+    private Set<ProjectParticipant> participants;
 
     @CreationTimestamp
     @Column
@@ -76,8 +73,8 @@ public class Project {
     @Column
     private LocalDate endDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="ProjectStatuses", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id")
     private ProjectStatus status;
 
 
@@ -88,7 +85,7 @@ public class Project {
     private Set<Task> tasks;
 
     public Project() {
-        this.participants = new ArrayList<>();
+        this.participants = new HashSet<>();
         this.creationTimeStamp = LocalDateTime.now();
         this.lastUpdatedTimestamp = LocalDateTime.now();
     }
@@ -141,11 +138,11 @@ public class Project {
         this.workflow = workflow;
     }
 
-    public List<ProjectParticipant> getParticipants() {
+    public Set<ProjectParticipant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<ProjectParticipant> participants) {
+    public void setParticipants(Set<ProjectParticipant> participants) {
         this.participants = participants;
     }
 
@@ -183,5 +180,18 @@ public class Project {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+        return getId().equals(project.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

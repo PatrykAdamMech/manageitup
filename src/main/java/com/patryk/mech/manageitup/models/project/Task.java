@@ -17,25 +17,29 @@ public class Task {
 
     public enum TaskStatus {
 
-        NOT_ASSIGNED("Not assigned",0),
-        ASSIGNED("Assigned", 25),
-        IN_PROGRESS("In progress", 50),
-        CLOSED("Closed",100);
+        NOT_ASSIGNED("Not assigned"),
+        ASSIGNED("Assigned"),
+        IN_PROGRESS("In progress"),
+        CLOSED("Closed");
 
         private final String label;
-        private final int progress;
 
-        TaskStatus(String label, int progress) {
+        TaskStatus(String label) {
             this.label = label;
-            this.progress = progress;
         }
 
         public String getLabel() {
             return this.label;
         }
 
-        public int getProgress() {
-            return this.progress;
+        // can be achieved by a Map<>;
+        public TaskStatus fromLabel(String label) {
+            return switch(label) {
+                case "Assigned" -> ASSIGNED;
+                case "In progress" -> IN_PROGRESS;
+                case "Closed" -> CLOSED;
+                default -> NOT_ASSIGNED;
+            };
         }
     }
 

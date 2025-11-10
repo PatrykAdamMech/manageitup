@@ -9,7 +9,8 @@ public class TaskResponse {
     private UUID id;
     private String name;
     private ProjectParticipantResponse assignee;
-    private String status;
+    private Task.TaskStatus status;
+    private String statusLabel;
     private String description;
     private UUID projectId;
 
@@ -19,7 +20,8 @@ public class TaskResponse {
     public TaskResponse(Task task) {
         this.id = task.getId();
         this.name = task.getName();
-        this.status = task.getStatus().getLabel();
+        this.status = task.getStatus();
+        this.statusLabel = task.getStatus().getLabel();
         this.assignee = ProjectParticipantResponse.fromProjectParticipant(task.getAssignee());
         this.description = task.getDescription();
         this.projectId = task.getProject().getId();
@@ -57,11 +59,11 @@ public class TaskResponse {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Task.TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Task.TaskStatus status) {
         this.status = status;
     }
 
@@ -71,6 +73,14 @@ public class TaskResponse {
 
     public void setProjectId(UUID projectId) {
         this.projectId = projectId;
+    }
+
+    public String getStatusLabel() {
+        return statusLabel;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel = statusLabel;
     }
 
     public static TaskResponse fromTask(Task task) {

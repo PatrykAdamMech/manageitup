@@ -59,7 +59,7 @@ public class ProjectController {
 
     @GetMapping("/all/user/owner/{id}")
     public ResponseEntity<Set<ProjectResponse>> getProjectByUserId(@PathVariable UUID id) {
-        Set<ProjectResponse> responses = projectRepository.findByOwner_Id(id)
+        Set<ProjectResponse> responses = projectRepository.findDistinctByOwner_Id(id)
                 .stream().map(ProjectResponse::new)
                 .collect(Collectors.toSet());
 

@@ -10,10 +10,10 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dial
 export class DeleteConfirmDialogComponent {
 
   readonly dialogRef = inject(MatDialogRef<DeleteConfirmDialogComponent>);
-  project: Project;
+  header: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Project) {
-      this.project = data;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: string) {
+      this.header = data;
   }
 
   deleteProject() {

@@ -3,9 +3,7 @@ package com.patryk.mech.manageitup.models.project.DTO;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ProjectParticipantResponse {
 
@@ -61,9 +59,9 @@ public class ProjectParticipantResponse {
         return participant == null ? null : new ProjectParticipantResponse(participant);
     }
 
-    public static List<ProjectParticipantResponse> fromProjectParticipantList(List<ProjectParticipant> participants) {
+    public static Set<ProjectParticipantResponse> fromProjectParticipantList(Set<ProjectParticipant> participants) {
         if(participants == null) return null;
-        List<ProjectParticipantResponse> responses = new ArrayList<>();
+        Set<ProjectParticipantResponse> responses = new HashSet<>();
         for(ProjectParticipant pp : participants) {
             responses.add(fromProjectParticipant(pp));
         }

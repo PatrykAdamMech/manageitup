@@ -69,31 +69,15 @@ public class TaskCreateRequest {
         this.assigneeId = assigneeId;
     }
 
-    public Task asTask(EntityManager em) {
-        Task task = new Task();
-
-        task.setName(this.name);
-        task.setStatus(this.status);
-        task.setDescription(this.description);
-
-        if(Objects.nonNull(this.getAssigneeId())) {
-            ProjectParticipant part = em.getReference(ProjectParticipant.class, this.getAssigneeId());
-            if(Objects.nonNull(part))  {
-                task.setAssignee(part);
-            } else {
-                throw new EntityNotFoundException("Participant not found with ID: " + this.getAssigneeId());
-            }
-        }
-
-        if(Objects.nonNull(this.getProjectId())) {
-            Project project = em.getReference(Project.class, this.getProjectId());
-            if(Objects.nonNull(project))  {
-                task.setProject(project);
-            } else {
-                throw new EntityNotFoundException("Project not found with ID: " + this.getAssigneeId());
-            }
-        }
-
-        return task;
+    @Override
+    public String toString() {
+        return "TaskCreateRequest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", assigneeId=" + assigneeId +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", projectId=" + projectId +
+                '}';
     }
 }

@@ -25,6 +25,6 @@ export class Project {
     this.participants = project?.participants || [];
     this.startDate = project?.startDate || null;
     this.endDate = project?.endDate || null;
-    this.tasks = project?.tasks || [];
+    this.tasks = (project.tasks ?? []).map(t => new Task(t));
   }
 }

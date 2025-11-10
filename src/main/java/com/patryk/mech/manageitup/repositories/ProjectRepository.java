@@ -20,8 +20,10 @@ public interface ProjectRepository extends CrudRepository<Project, UUID> {
     Optional<Project> findById(UUID id);
 
     @EntityGraph(GRAPH_ALL)
-    List<Project> findByOwner_Id(UUID userId);
+    List<Project> findDistinctByOwner_Id(UUID userId);
 
     @EntityGraph(GRAPH_ALL)
     List<Project> findDistinctByParticipants_User_Id(UUID userId);
+
+
 }

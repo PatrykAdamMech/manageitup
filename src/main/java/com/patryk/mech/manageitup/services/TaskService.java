@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -47,15 +48,18 @@ public class TaskService {
         finalTask.setName(tcr.getName());
         finalTask.setStatus(tcr.getStatus());
 
-        ProjectParticipant pp = ppRepository.findById(tcr.getAssigneeId())
-                .orElseThrow(() -> new EntityNotFoundException("Participant not found with ID: " + tcr.getAssigneeId()));
-        finalTask.setAssignee(pp);
+        if(Objects.nonNull(tcr.getAssigneeId())) {
+            ProjectParticipant pp = ppRepository.findById(tcr.getAssigneeId())
+                    .orElseThrow(() -> new EntityNotFoundException("Participant not found with ID: " + tcr.getAssigneeId()));
+            finalTask.setAssignee(pp);
+        }
 
-        Project project = projectRepository.findById(tcr.getProjectId())
-                .orElseThrow(() -> new EntityNotFoundException("Project not found with ID: " + tcr.getProjectId()));
-        finalTask.setProject(project);
+        if(Objects.nonNull(tcr.getProjectId())) {
+            Project project = projectRepository.findById(tcr.getProjectId())
+                    .orElseThrow(() -> new EntityNotFoundException("Project not found with ID: " + tcr.getProjectId()));
+            finalTask.setProject(project);
 
+        }
         return finalTask;
-
     }
 }

@@ -16,7 +16,7 @@ public class ProjectResponse {
     private String title;
     private UserResponse owner;
     private WorkflowResponse workflow;
-    private List<ProjectParticipantResponse> participants;
+    private Set<ProjectParticipantResponse> participants;
     private LocalDateTime creationTimestamp;
     private LocalDateTime lastUpdatedTimestamp;
     private LocalDate startDate;
@@ -89,11 +89,11 @@ public class ProjectResponse {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public List<ProjectParticipantResponse> getParticipants() {
+    public Set<ProjectParticipantResponse> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<ProjectParticipantResponse> participants) {
+    public void setParticipants(Set<ProjectParticipantResponse> participants) {
         this.participants = participants;
     }
 

@@ -1,18 +1,18 @@
 import { ProjectParticipant } from './project-participant';
 
-export enum TaskStatus {
-  NOT_ASSIGNED = 'NOT_ASSIGNED',
-  ASSIGNED = 'ASSIGNED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  CLOSED = 'CLOSED'
+export type TaskStatusName = 'NOT_ASSIGNED' | 'ASSIGNED' | 'IN_PROGRESS' | 'CLOSED';
+
+export interface TaskStatus {
+  name: TaskStatusName;
+  label: string;
 }
 
 export class Task {
-
   id: string | null;
   name: string | null;
   assignee: ProjectParticipant | null;
-  status: TaskStatus | null;
+  status: TaskStatusName | null;
+  statusLabel: string | null;
   description: string | null;
   projectId: string | null;
 
@@ -20,7 +20,8 @@ export class Task {
     this.id = task?.id || null;
     this.name = task?.name || null;
     this.assignee = task?.assignee || null;
-    this.status = task?.status || TaskStatus.NOT_ASSIGNED;
+    this.status = task?.status || null;
+    this.statusLabel = task?.statusLabel || '';
     this.description = task?.description || null;
     this.projectId = task?.projectId || null;
   }

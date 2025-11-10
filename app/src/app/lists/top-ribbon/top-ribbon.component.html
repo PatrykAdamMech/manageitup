@@ -1,7 +1,7 @@
-<div>
-  <button matButton="filled" [routerLink]="'/home'">Home</button>
-  <button matButton="filled" (click)="goDashboard()" *ngIf="isVisibleUser()">Dashboard</button>
-  <button matButton="filled" (click)="goAdminPanel()" *ngIf="isVisibleAdmin()">Admin panel</button>
-  <button matButton="filled" (click)="logout()" *ngIf="isVisibleUser()">Logout</button>
-  <button matButton="filled" (click)="goBack()">Back</button>
+<div class="header">
+  <button matButton="filled" [routerLink]="'/home'" class="button button--primary">Home</button>
+  <button matButton="filled" (click)="goDashboard()" class="button button--primary" *ngIf="isVisibleUser()">Dashboard</button>
+  <button matButton="filled" (click)="goAdminPanel()" class="button button--primary" *ngIf="isVisibleAdmin()">Admin panel</button>
+  <button matButton="filled" (click)="logout()" class="button button--primary" *ngIf="isVisibleUser()">Logout</button>
+  <button matButton="filled" (click)="goBack()" class="button button--primary">Back</button>
 </div>

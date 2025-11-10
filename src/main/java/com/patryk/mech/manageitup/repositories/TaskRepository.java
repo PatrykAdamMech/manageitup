@@ -13,4 +13,6 @@ public interface TaskRepository extends CrudRepository<Task, UUID> {
 
     @EntityGraph(GRAPH_ALL)
     List<Task> findByProject_Id(UUID projectId);
+
+
 }
