@@ -1,7 +1,10 @@
 <!-- username, password, email, name, lastName, role -->
 <form class="user-form form" [formGroup]="mainFormGroup" (ngSubmit)="onSubmit()">
-  <button matMiniFab type="submit">
+  <button class="button-icon button--primary" mat-icon-button type="submit">
     <mat-icon>save</mat-icon>
+  </button>
+  <button class="button-icon button--primary" mat-icon-button type="button" (click)="cancel()">
+    <mat-icon>cancel</mat-icon>
   </button>
   <div class="user-form">
     <mat-form-field>

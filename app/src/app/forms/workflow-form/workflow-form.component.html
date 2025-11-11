@@ -1,12 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="save()" class="workflow-form form">
   <mat-dialog-content>
-    <h3>Create new workflow</h3>
-  <mat-form-field>
-    <mat-label>Workflow name</mat-label>
-    <input matInput formControlName="name">
-  </mat-form-field>
+  <h3>Create new workflow</h3>
+  <div class="workflow-name-wrapper">
 
-  <div formArrayName="statuses">
+    <mat-form-field>
+      <mat-label>Workflow name</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+
+  </div>
+
+  <div class="workflow-statuses-wrapper" formArrayName="statuses">
     <div *ngFor="let g of statusesFA.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i" class="workflow-form-statuses">
       <mat-form-field class="existing-status">
         <mat-label>Pick existing status</mat-label>
@@ -22,7 +26,7 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field class="w-36" appearance="fill">
+      <mat-form-field>
         <mat-label>Priority</mat-label>
         <input type="number" matInput formControlName="priority" />
       </mat-form-field>
@@ -32,7 +36,7 @@
       </button>
     </div>
   </div>
-    <div class="mt-2">
+    <div class="workflow-add-button">
       <button mat-stroked-button type="button" (click)="addStatusRow()">Add status</button>
     </div>
 </mat-dialog-content>

@@ -1,7 +1,7 @@
 <div class="card my-5">
   <div class="card-body">
     <div class="toolbar-body">
-      <button matMiniFab routerLink="/users/add">
+      <button class="button-icon button--primary" mat-icon-button routerLink="/users/add">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -10,10 +10,10 @@
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let user">
-            <button matMiniFab (click)="deleteUser(user, $event)">
+            <button class="button-icon button--primary" mat-icon-button (click)="deleteUser(user, $event)">
               <mat-icon>delete</mat-icon>
             </button>
-            <button matMiniFab (click)="editUser(user, $event)"> <!--  -->
+            <button class="button-icon button--primary" mat-icon-button (click)="editUser(user, $event)"> <!--  -->
               <mat-icon>edit</mat-icon>
             </button>
           </td>

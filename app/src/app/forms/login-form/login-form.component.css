@@ -4,12 +4,21 @@ mat-form-field {
 
 .login-form-div {
   display: block;
-  width: 30%;
+  width: 100%;
 }
 
-button {
+.mat-mdc-form-field {
+  min-width: 360px;
+  display: grid;
+}
+
+.login-submit-button {
+  float: right;
+}
+
+/*button {
   min-width:100px;
   max-width:300px;
   min-height:40px;
   max-height:120px;
-}
+} */

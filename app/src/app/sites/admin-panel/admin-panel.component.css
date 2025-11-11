@@ -1,0 +1,11 @@
+.data-management-buttons-div {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: nowrap;
+}
+
+.admin-button {
+  margin: 12px;
+}

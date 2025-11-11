@@ -54,6 +54,7 @@ import { AuthInterceptor } from './guards/auth-interceptor';
 import { AuthService  } from './services/auth-service.service';
 import { UserDashboardComponent } from './lists/user-dashboard/user-dashboard.component';
 import { TaskListComponent } from './lists/task-list/task-list.component';
+import { UserDataDisplayComponent } from './model/user-data-display/user-data-display.component';
 
 export function initAuth(auth: AuthService) {
   // triggers constructor logic and returns a resolved promise
@@ -86,7 +87,8 @@ export function initAuth(auth: AuthService) {
     ProjectStatusListComponent,
     DeleteConfirmDialogComponent,
     UserDashboardComponent,
-    TaskListComponent
+    TaskListComponent,
+    UserDataDisplayComponent
   ],
   imports: [
     BrowserModule,

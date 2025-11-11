@@ -1,6 +1,9 @@
 <form class="project-form form" [formGroup]="mainFormGroup" (ngSubmit)="save()">
-  <button matMiniFab type="submit">
+  <button class="button-icon button--primary" mat-icon-button type="submit">
     <mat-icon>save</mat-icon>
+  </button>
+  <button class="button-icon button--primary" mat-icon-button type="button" (click)="cancel()">
+    <mat-icon>cancel</mat-icon>
   </button>
   <div class="project-form-main-data" >
     <h3>Project details</h3>
@@ -79,16 +82,16 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button matMiniFab (click)="addWorkflow()" type="button">
+      <button class="button-icon button--primary" mat-icon-button (click)="addWorkflow()" type="button">
         <mat-icon>add</mat-icon>
       </button>
-      <app-project-status-list
+      <i><app-project-status-list
         [statuses]="statusesToDisplay"
-      ></app-project-status-list>
+      ></app-project-status-list></i>
     </div>
     <div class="project-form-participants">
       <h3>Participants</h3>
-      <button matMiniFab (click)="addParticipant()" type="button">
+      <button class="button-icon button--primary" mat-icon-button (click)="addParticipant()" type="button">
         <mat-icon>edit</mat-icon>
       </button>
       <div class="project-form-participants-display">

@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-project-list',
@@ -37,10 +38,11 @@ export class ProjectListComponent implements OnInit {
   expanded: boolean = false;
   expandedProjectIds: Array<string> = [];
 
-  constructor(private projectService: ProjectService, private route: ActivatedRoute, private router: Router) {}
+  scrollStrategy = this.overlay.scrollStrategies.block();
+
+  constructor(private projectService: ProjectService, private route: ActivatedRoute, private router: Router, private overlay: Overlay) {}
 
   ngOnInit() {
-
     if(this.userId) {
       this.projectService.findByOwnerId(this.userId).subscribe( data => {
         this.projects = data;
@@ -66,16 +68,17 @@ export class ProjectListComponent implements OnInit {
         this.projectService.delete(project.id)?.subscribe(deleted => {
           console.log(deleted);
         });
+        window.location.reload();
       }
-      window.location.reload();
     });
   }
 
   openParticipants(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(ParticipantsListDialogComponent, {
-      height: '40%',
-      width: '65%',
+      height: '350px',
+      width: '800px',
+      scrollStrategy: this.scrollStrategy,
       data: project
     });
   }
@@ -83,8 +86,8 @@ export class ProjectListComponent implements OnInit {
   openWorkflows(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(WorlflowDialogComponent, {
-      height: '40%',
-      width: '65%',
+      height: '200px',
+      width: '600px',
       data: project
     });
   }
@@ -92,8 +95,8 @@ export class ProjectListComponent implements OnInit {
   openOwner(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(UserDisplayComponent, {
-      height: '40%',
-      width: '65%',
+      height: '250px',
+      width: '600px',
       data: project?.owner
     });
   }

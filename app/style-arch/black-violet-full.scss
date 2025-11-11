@@ -1,0 +1,400 @@
+// black-violet-full.scss
+// Single-file theme for the NeuralGlass look (no animations).
+// Use: import this file from your global styles.scss or compile to styles.css.
+
+//////////////////////////
+// Tokens & utilities
+//////////////////////////
+$bg-dark:      #07070a;
+$black:        #000000;
+$primary:      #e0a3ff;   // violet highlight
+$accent:       #ff69b4;   // pink accent
+$cyan:         #00e5ff;
+$muted:        #d1d1d1;
+$white-trans:  rgba(255,255,255,0.92);
+$glass-weak:   rgba(255,255,255,0.03);
+$glass-med:    rgba(255,255,255,0.06);
+$glass-strong: rgba(255,255,255,0.10);
+$glass-border: rgba(224,163,255,0.12);
+
+$max-width: 1200px;
+
+@mixin glass($bg, $border: $glass-border, $radius: 18px, $shadow: 0 8px 32px rgba(0,0,0,0.35)) {
+  background: $bg;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid $border;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+//////////////////////////
+// Global & background
+//////////////////////////
+html, body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  margin: 0;
+  font-family: "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif;
+  background: $black;
+  color: $white-trans;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* layered colored background (sits behind content) */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 500px at 10% 30%, rgba(224,163,255,0.16), transparent 16%),
+    radial-gradient(700px 420px at 85% 18%, rgba(255,105,180,0.12), transparent 22%),
+    linear-gradient(180deg, rgba(10,4,12,0.92) 0%, rgba(86,0,86,0.62) 36%, rgba(0,0,0,0.90) 100%);
+  filter: saturate(110%) contrast(96%);
+}
+
+/* decorative shapes (static) */
+.shape {
+  position: absolute;
+  border: 2px solid rgba(224,163,255,0.12);
+  width: 96px;
+  height: 96px;
+  transform: rotate(14deg);
+  border-radius: 6px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.shape.shape-1 { left: 3%; top: 36%; }
+.shape.shape-2 { right: 6%; top: 70%; width: 120px; height: 120px; transform: rotate(-12deg); }
+
+//////////////////////////
+// Layout containers
+//////////////////////////
+.main {
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;   /* stack header/content/footer vertically */
+  min-height: 100vh;       /* or height:100% if parent height is defined */
+  box-sizing: border-box;
+}
+
+.main-container {
+  flex: 1 1 0;          /* allow to grow and shrink; 0 basis is safer in nested flexes */
+  display: flex;        /* make it a flex container so we can center / stretch children */
+  //align-items: center;  /* vertical alignment inside content area */
+  justify-content: center; /* horizontal alignment */
+  padding: 2rem;
+}
+
+//////////////////////////
+// Header & Top Nav
+//////////////////////////
+.header {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 96%;
+  max-width: $max-width;
+  height: 70px;
+  padding: 16px 32px;
+  @include glass(rgba(224,163,255,0.06), $glass-border, 22px, 0 8px 28px rgba(0,0,0,0.40));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+.header-push {
+  background: rgba(255,255,255,0.00);
+  width: 100%;
+  height: 100px;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: 800;
+  text-decoration: none;
+  background: linear-gradient(90deg, $primary, $accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.nav-links a.active {
+  color: $primary;
+  background: linear-gradient(135deg, rgba(224,163,255,0.10), rgba(255,105,180,0.05));
+  box-shadow: 0 0 20px rgba(224,163,255,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+  border: 1px solid rgba(224,163,255,0.12);
+}
+
+//////////////////////////
+// Hero
+//////////////////////////
+.hero {
+  text-align: center;
+  padding: 36px 8px 56px;
+  color: $white-trans;
+}
+.hero .kicker {
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.28);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+.hero .title {
+  font-size: 68px;
+  font-weight: 800;
+  margin: 8px 0 20px;
+  line-height: 0.94;
+  background: linear-gradient(90deg, #d9a8ff, #b27cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero .sub {
+  margin: 0 auto;
+  max-width: 780px;
+  color: rgba(255,255,255,0.78);
+  font-size: 1.02rem;
+  margin-bottom: 28px;
+}
+
+//////////////////////////
+// Stat cards
+//////////////////////////
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 26px;
+  flex-wrap: wrap;
+}
+.stat-card {
+  width: 170px;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(224,163,255,0.08);
+  background: rgba(255,255,255,0.02);
+  color: #fff;
+  text-align: center;
+}
+.stat-card .value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f7ebff;
+  margin-bottom: 8px;
+}
+.stat-card .label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.56);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+//////////////////////////
+// Buttons
+//////////////////////////
+.button {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: box-shadow .12s ease, transform .08s ease;
+  color: #fff;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.button--primary {
+  background: linear-gradient(135deg, $primary, $accent);
+  color: $muted;
+  box-shadow: 0 6px 22px rgba(224,163,255,0.16);
+}
+
+.button--secondary {
+  background: transparent;
+  border: 2px solid rgba(224,163,255,0.18);
+  color: $primary;
+  padding: 12px 26px;
+  box-shadow: 0 6px 20px rgba(224,163,255,0.06);
+}
+
+//////////////////////////
+// Inputs
+//////////////////////////
+.input, ng-valid {
+  width: 100%;
+  padding: 12px 14px !important;
+  background: $glass-weak;
+  border: 1px solid rgba(255,255,255,0.16) !important;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem !important;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: rgba(255,255,255,0.45);
+  margin-left: 30px;
+}
+
+.input--placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.mat-mdc-form-field-required-marker {
+   color: rgba(255,255,255,0.45);
+}
+
+.mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+  left: 10px !important;
+  right: 10px !important;
+}
+
+.mdc-text-field {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.input:focus,
+.input.is-focused {
+  outline: none;
+  border-color: $cyan;
+  box-shadow: 0 0 18px rgba(0,230,255,0.10);
+  background: rgba(255,255,255,0.04);
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// after your theme import in src/styles.scss
+$input-bg: rgba(255,255,255,0.03);   // desired visible input background
+$input-bg-focus: rgba(255,255,255,0.06);
+
+
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-underline,
+.mat-mdc-form-field-appearance-fill .mat-mdc-form-field-underline,
+.mat-mdc-form-field-appearance-standard .mat-mdccd-form-field-underline {
+  display: none;
+}
+//////////////////////////
+// Tables
+//////////////////////////
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  color: $muted;
+  font-size: 0.95rem;
+}
+.table th, .table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.table thead th {
+  color: $primary;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(224,163,255,0.10);
+}
+
+//////////////////////////
+// Dialog / modal content
+//////////////////////////
+.dialog {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+  @include glass(rgba(255,255,255,0.06), rgba(255,255,255,0.14), 14px, 0 24px 60px rgba(0,0,0,0.6));
+  color: #fff;
+  box-sizing: border-box;
+}
+
+//////////////////////////
+// Footer
+//////////////////////////
+footer {
+  text-align: center;
+  //padding: 60px 20px 40px;
+  border-top: 1px solid rgba(224,163,255,0.10);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.78);
+  height: 70px;
+  flex: 0 0 auto;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  color: rgba(255,255,255,0.82);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+//////////////////////////
+// Responsive
+//////////////////////////
+@media (max-width: 1000px) {
+  .nav-links { display: none; }
+  //padding: 120px 20px 80px;
+  .container {  }
+  .hero .title { font-size: 48px; }
+}
+@media (max-width: 600px) {
+  .hero .title { font-size: 36px; }
+  .stat-card { width: 140px; padding: 14px; }
+  .header { padding: 12px 16px; top: 12px; left: 6%; transform: none; }
+}

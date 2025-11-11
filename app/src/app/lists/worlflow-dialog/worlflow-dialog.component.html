@@ -1,10 +1,26 @@
 <mat-dialog-content>
-  <p>Project: {{ project.title }}</p>
-  <p>Workflow:</p>
-  <ng-container *ngIf="project.workflow">
-    <ng-container class="workflow-list-statuses" *ngFor="let s of project.workflow.statuses; let last = last">
-      <app-status-display *ngIf="s" [status]="s"></app-status-display>
-      <mat-divider *ngIf="!last"></mat-divider>
-    </ng-container>
-  </ng-container>
+  <table class="dialog-info-table table">
+    <tr>
+      <td><span class="dialog-label">Project: </span></td>
+      <td>{{ project.title }}</td>
+    </tr>
+    <tr>
+      <td><span class="dialog-label">Workflow: </span></td>
+      <td>{{ project.workflow?.name }}</td>
+    </tr>
+    <tr>
+      <td><span class="dialog-label">Statuses: </span></td>
+      <td>
+        <ng-container *ngIf="project.workflow">
+          <ng-container class="workflow-list-statuses" *ngFor="let s of project.workflow.statuses; let last = last">
+            <i>{{ s.name }}</i>
+            <span *ngIf="!last">→</span>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </table>
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close class="button">Close</button>
+</mat-dialog-actions>

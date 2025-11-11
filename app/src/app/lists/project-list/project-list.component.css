@@ -10,3 +10,31 @@
   cursor: pointer;
 }
 
+.project-list-body {
+  max-width: 1200px;
+}
+
+.mat-mdc-cell {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+compact-selection {
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display:none;
+  }
+}
+
+.button-table-column {
+  width: 157px;
+}
+
+mat-form-field > div {
+  background: yellow;
+}
+
+.status-column {
+  height: 57px;
+  width: 244px;
+}

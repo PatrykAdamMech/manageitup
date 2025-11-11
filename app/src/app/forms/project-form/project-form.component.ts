@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, inject } from '@angular/core';
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, formatDate, Location } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Workflow } from '../../model/project/workflow';
 import { User } from '../../model/user';
@@ -146,7 +146,8 @@ export class ProjectFormComponent implements OnInit {
               private statusService: ProjectStatusService,
               private projectService: ProjectService,
               private router: Router,
-              private dateAdapter: DateAdapter<Date>) {
+              private dateAdapter: DateAdapter<Date>,
+              private location: Location) {
     this.dateAdapter.setLocale('pl-PL');
   }
 
@@ -244,8 +245,8 @@ export class ProjectFormComponent implements OnInit {
 
   addParticipant() {
     let dialogRef = this.dialog.open(ProjectParticipantFormComponent, {
-          height: '40%',
-          width: '65%',
+          height: '400px',
+          width: '700px',
           data: {participants: this.participants}
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -261,8 +262,8 @@ export class ProjectFormComponent implements OnInit {
 
   addWorkflow() {
     let dialogRef = this.dialog.open(WorkflowFormComponent, {
-          height: '40%',
-          width: '65%',
+          height: '400px',
+          width: '700px',
           data: {}
     });
 
@@ -420,6 +421,10 @@ export class ProjectFormComponent implements OnInit {
       return this.toLocalDateString(convDate);
   }
 
+  cancel() {
+    this.router.navigateByUrl('/projects/list');
+  }
+
   save() {
 
     if(this.mainFormGroup.invalid) {
@@ -432,7 +437,12 @@ export class ProjectFormComponent implements OnInit {
       this.projectService.update(body).subscribe({
         next: (res) => {
           console.log('Saved project');
-          this.router.navigateByUrl('/projects/list');
+          //this.router.navigateByUrl('/projects/list');
+          if (window.history.length > 1) {
+                this.location.back();
+          } else {
+            this.router.navigateByUrl('/projects/list');
+          }
         },
         error: (err) => {
           console.error('Save failed', err);
@@ -445,7 +455,12 @@ export class ProjectFormComponent implements OnInit {
       this.projectService.save(body).subscribe({
         next: (res) => {
           console.log('Saved project');
-          this.router.navigateByUrl('/projects/list');
+          //this.router.navigateByUrl('/projects/list');
+          if (window.history.length > 1) {
+                this.location.back();
+          } else {
+            this.router.navigateByUrl('/projects/list');
+          }
         },
         error: (err) => {
           console.error('Save failed', err);

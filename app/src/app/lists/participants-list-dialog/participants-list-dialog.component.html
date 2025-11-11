@@ -1,18 +1,29 @@
-<!--<app-user-list [username]="p.user.username"-->
-<!--               [password]="p.user.password"-->
-<!--               [email]="p.user.email"-->
-<!--               [name]="p.user.name"-->
-<!--               [lastName]="p.user.lastName"-->
-<!--               [createdOn]="p.user.createdOn"-->
-<!--               [lastModified]="p.user.lastModified">-->
-
-<!--</app-user-list>-->
 <mat-dialog-content>
-    <p>Project: {{ project.title }}</p>
-    <p>Participants:</p>
+  <table class="dialog-info-table table">
+    <tr>
+      <td><span class="dialog-label">Project: </span></td>
+      <td>{{ project.title }}</td>
+    </tr>
+    <tr>
+      <td><span class="dialog-label">Participants:</span></td>
+    </tr>
+  </table>
+  <table>
     <ng-container class="participants-list-users" *ngFor="let p of project.participants; let last = last">
-      <p>{{ p.role }}</p>
-      <app-user-display *ngIf="p.user" [user]="p.user"></app-user-display>
+      <tr>
+        <td><span class="dialog-label">{{ p.role }}</span></td>
+        <td>
+          <app-data-user-display
+            *ngIf="p.user"
+            [user]="p.user"
+          ></app-data-user-display>
+        </td>
+      </tr>
       <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
+  </table>
+
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close class="button">Close</button>
+</mat-dialog-actions>

@@ -120,9 +120,7 @@ export class UserFormComponent {
 
   }
 
-
-
-  gotoUserList() {
-    this.router.navigate(['/users']);
+  cancel() {
+    this.router.navigate(['users/list']);
   }
 }

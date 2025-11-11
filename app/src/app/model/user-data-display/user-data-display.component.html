@@ -1,0 +1,24 @@
+<mat-dialog-content>
+  <div class="personal-data">
+    <h3>{{ user.name }} {{ user.lastName }}</h3>
+  </div>
+
+  <div class="account-data">
+    <table class="dialog-info-table table">
+      <tr>
+        <td><span class="dialog-label">Username: </span></td>
+        <td>{{ user.username }}</td>
+      </tr>
+      <tr>
+        <td><span class="dialog-label">Email: </span></td>
+        <td><a class="raw-data-link" href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+      </tr>
+      <tr>
+        <td><span class="dialog-label">System role: </span></td>
+        <td>{{ user.role }}</td>
+      </tr>
+    </table>
+
+    <!--<p class="raw-data">{{ user.createdOn }}</p><p class="raw-data">{{ user.lastModified }}</p>-->
+  </div>
+</mat-dialog-content>

@@ -1,5 +1,10 @@
-<p><strong>ManageIt</strong> Admin Panel</p>
-<h3>Data Management</h3>
-<button matButton="filled" [routerLink]="'/users/list'">Users</button>
-<button matButton="filled" [routerLink]="'/projects/list'">Projects</button>
-<!--<router-outlet></router-outlet>-->
+<h2><strong>ManageIt</strong> Admin Panel</h2>
+<div class="data-management-div">
+  <h3>Data Management</h3>
+
+  <div class="data-management-buttons-div">
+    <button matButton="filled" class="button button--primary admin-button" [routerLink]="'/users/list'">Users</button>
+    <button matButton="filled" class="button button--primary admin-button" [routerLink]="'/projects/list'">Projects</button>
+  </div>
+</div>
+

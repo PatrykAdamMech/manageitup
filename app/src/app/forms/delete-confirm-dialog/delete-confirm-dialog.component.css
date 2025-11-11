@@ -1,0 +1,21 @@
+.delete-confirmation-dialog {
+  display: flex;
+  flex-direction: column;
+  column-gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.delete-confirmation-dialog-buttons {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  justify-content: space-evenly;
+}
+
+.delete-confirmation-dialog-buttons > button {
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 100%;
+}

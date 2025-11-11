@@ -1,0 +1,14 @@
+<div class="dashboard-main-container dashboard">
+  <div class="dashboard-top-container dashboard">
+
+
+
+  </div>
+  <div class="dashboard-projects dashboard">
+    <h2>Owned projects</h2>
+    <app-project-list
+      [displayAdmin]="isAdmin"
+      [userId]="loggedUserId"
+    ></app-project-list>
+  </div>
+</div>
