@@ -103,6 +103,7 @@ public class ProjectController {
 
     @PutMapping("/update/full")
     public ResponseEntity<String> updateProjectFull(@RequestBody ProjectCreateFullRequest request) {
+        System.out.println("Received create request: " + request);
         if(request != null) {
             UUID savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
 

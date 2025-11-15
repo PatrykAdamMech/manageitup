@@ -1,5 +1,6 @@
 package com.patryk.mech.manageitup.models.project;
 
+import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -75,7 +76,7 @@ public class Task {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = NameUtils.capitalizeWords(name);
     }
 
     public ProjectParticipant getAssignee() {
@@ -99,7 +100,7 @@ public class Task {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = NameUtils.capitalize(description);
     }
 
     public Project getProject() {

@@ -9,11 +9,13 @@ public class LoginResult {
     private String tokenType = "Bearer";
     private User.UserRoles role;
     private UUID userId;
+    private String failReason;
 
-    public LoginResult(String token, User.UserRoles role, UUID userId) {
+    public LoginResult(String token, User.UserRoles role, UUID userId, String failReason) {
         this.accessToken = token;
         this.role = role;
         this.userId = userId;
+        this.failReason = failReason;
     }
     public String getAccessToken() { return accessToken; }
     public String getTokenType() { return tokenType; }
@@ -33,45 +35,12 @@ public class LoginResult {
     public void setUserId(UUID userId) {
         this.userId = userId;
     }
-    //
-//    public enum Result {
-//        WRONG_PASSWORD,
-//        NOT_REGISTERED,
-//        SUCCESSFUL
-//    }
-//
-//    private Result result;
-//
-//    public LoginResult() {
-//        this(false, null);
-//    }
-//
-//    public LoginResult(boolean isLogged, Result result) {
-//        this.isLogged = isLogged;
-//        this.result = result;
-//    }
-//
-//    public boolean isLogged() {
-//        return isLogged;
-//    }
-//
-//    public void setLogged(boolean isLogged) {
-//        this.isLogged = isLogged;
-//    }
-//
-//    public void setResult(Result result) {
-//        this.result = result;
-//    }
-//
-//    public Result getResult() {
-//        return result;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "LoginResult{" +
-//                "isLogged=" + isLogged +
-//                ", result=" + result +
-//                '}';
-//    }
+
+    public String getFailReason() {
+        return failReason;
+    }
+
+    public void setFailReason(String failReason) {
+        this.failReason = failReason;
+    }
 }

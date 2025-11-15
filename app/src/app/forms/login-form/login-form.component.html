@@ -2,17 +2,17 @@
   <div class="login-input-fields">
     <h2>Login</h2>
     <div>
-      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form" [formGroup]="mainFormGroup">
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input matInput name="email" [(ngModel)]="loginModel.email" required class="input">
+          <input matInput name="email" [(ngModel)]="loginModel.email" formControlName="email" class="input">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Password</mat-label>
-          <input matInput name="password" type="password" [(ngModel)]="loginModel.password" required class="input">
+          <input matInput name="password" type="password" [(ngModel)]="loginModel.password" formControlName="password" class="input">
         </mat-form-field>
         <div class="login-submit-button">
-          <button matButton="filled" color="primary" type="submit" [disabled]="loginForm.invalid" class="button button--primary">Login</button>
+          <button matButton="filled" color="primary" type="submit" class="button button--primary">Login</button>
         </div>
       </form>
     </div>

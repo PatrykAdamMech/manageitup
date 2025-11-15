@@ -40,16 +40,21 @@ public class LoginController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResult> login(@RequestBody LoginRequest loginRequest) {
+        User user;
+        String token;
         try {
+            user = users.findByEmail(loginRequest.getEmail()).orElse(null);
+            if(Objects.isNull(user)) return new ResponseEntity<>(new LoginResult(null,null,null, "User not found for email address: " + loginRequest.getEmail()), HttpStatus.NOT_FOUND);
+
             Authentication auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
-            String token = tokenProvider.generateToken(auth);
-            User user = users.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found!: " + loginRequest.getEmail()));
-            return ResponseEntity.ok(new LoginResult(token, user.getRole(), user.getId()));
+            token = tokenProvider.generateToken(auth);
+
+            return ResponseEntity.ok(new LoginResult(token, user.getRole(), user.getId(), null));
         } catch (org.springframework.security.core.AuthenticationException ex) {
             System.out.println("Login failed for " + loginRequest.getEmail() + ": " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return new ResponseEntity<>(new LoginResult(null,null,null, "Wrong password"), HttpStatus.UNAUTHORIZED);
         }
     }
 
