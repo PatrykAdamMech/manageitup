@@ -1,8 +1,8 @@
 package com.patryk.mech.manageitup.models.project.DTO;
 
 import com.patryk.mech.manageitup.models.User;
+import com.patryk.mech.manageitup.shared.DateUtils;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class UserResponse {
@@ -13,8 +13,8 @@ public class UserResponse {
     private String name;
     private String lastName;
     private User.UserRoles role;
-    private LocalDateTime createdOn;
-    private LocalDateTime lastModified;
+    private String createdOn;
+    private String lastModified;
 
     public UserResponse() {
     }
@@ -26,8 +26,8 @@ public class UserResponse {
         this.setName(user.getName());
         this.setRole(user.getRole());
         this.setLastName(user.getLastName());
-        this.setCreatedOn(user.getCreatedOn());
-        this.setLastModified(user.getLastModified());
+        this.setCreatedOn(DateUtils.toLocalTimeString(user.getCreatedOn()));
+        this.setLastModified(DateUtils.toLocalTimeString(user.getLastModified()));
     }
 
 
@@ -39,11 +39,11 @@ public class UserResponse {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedOn() {
+    public String getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -87,11 +87,11 @@ public class UserResponse {
         this.name = name;
     }
 
-    public LocalDateTime getLastModified() {
+    public String getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(LocalDateTime lastModified) {
+    public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
