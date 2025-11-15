@@ -3,7 +3,6 @@ package com.patryk.mech.manageitup.models.project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.patryk.mech.manageitup.models.Workflow;
 import com.patryk.mech.manageitup.services.WorkflowService;
-import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
@@ -47,7 +46,7 @@ public class ProjectStatus {
     }
 
     public void setName(String name) {
-        this.name = NameUtils.capitalizeWords(name);
+        this.name = name;
     }
 
     @Nullable

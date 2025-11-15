@@ -2,7 +2,6 @@ package com.patryk.mech.manageitup.models.project;
 
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.Workflow;
-import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -128,7 +127,7 @@ public class Project {
     }
 
     public void setTitle(String title) {
-        this.title = NameUtils.capitalizeWords(title);
+        this.title = title;
     }
 
     public Workflow getWorkflow() {

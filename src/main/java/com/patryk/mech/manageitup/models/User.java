@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
-import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -144,7 +143,7 @@ public class User {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = NameUtils.capitalizeWords(lastName);
+        this.lastName = lastName;
     }
 
     public String getName() {
@@ -152,7 +151,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = NameUtils.capitalizeWords(name);
+        this.name = name;
     }
 
     public String getPassword() {
@@ -168,7 +167,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = NameUtils.capitalizeWords(username);
+        this.username = username;
     }
 
     public String getEmail() {

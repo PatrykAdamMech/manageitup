@@ -3,7 +3,6 @@ package com.patryk.mech.manageitup.models;
 import com.patryk.mech.manageitup.models.project.DTO.ProjectCreateFullRequest;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
-import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class Workflow {
     }
 
     public void setName(String name) {
-        this.name = NameUtils.capitalizeWords(name);
+        this.name = name;
     }
 
     public boolean addStatus(ProjectStatus ps) {
