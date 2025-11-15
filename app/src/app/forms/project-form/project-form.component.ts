@@ -264,7 +264,7 @@ export class ProjectFormComponent implements OnInit {
     let dialogRef = this.dialog.open(WorkflowFormComponent, {
           height: '400px',
           width: '700px',
-          data: {}
+          data: this.workflow
     });
 
     dialogRef.afterClosed().pipe(

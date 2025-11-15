@@ -14,21 +14,18 @@
     <div *ngFor="let g of statusesFA.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i" class="workflow-form-statuses">
       <mat-form-field class="existing-status">
         <mat-label>Pick existing status</mat-label>
-        <input
-          matInput
-          [matAutocomplete]="auto"
-          formControlName="name" />
-        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption
-                          [displayWith]="displayStatus">
-          <mat-option *ngFor="let opt of optionsStreams[i] | async" [value]="opt">
-            {{ opt.label }}
-          </mat-option>
-        </mat-autocomplete>
+        <input matInput formControlName="name" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Priority</mat-label>
-        <input type="number" matInput formControlName="priority" />
+        <mat-select type="number"
+               matInput
+               formControlName="priority">
+          <ng-container *ngFor="let p of priorities">
+            <mat-option [value]="p">{{ p }}</mat-option>
+          </ng-container>
+        </mat-select>
       </mat-form-field>
 
       <button mat-icon-button color="warn" type="button" (click)="removeStatusRow(i)" [disabled]="statusesFA.length === 1">
