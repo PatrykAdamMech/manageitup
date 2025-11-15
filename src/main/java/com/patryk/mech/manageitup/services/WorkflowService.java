@@ -5,6 +5,7 @@ import com.patryk.mech.manageitup.models.project.DTO.WorkflowCreateRequest;
 import com.patryk.mech.manageitup.models.project.ProjectStatus;
 import com.patryk.mech.manageitup.repositories.ProjectStatusRepository;
 import com.patryk.mech.manageitup.repositories.WorkflowRepository;
+import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class WorkflowService {
         }
 
         Workflow w = new Workflow();
-        w.setName(wcr.getName());
+        w.setName(NameUtils.capitalizeWords(wcr.getName()));
 
         w = workflowRepository.save(w);
 
@@ -54,7 +55,7 @@ public class WorkflowService {
                 finalStatus = statusRepository.findById(ps.getId()).orElseThrow(() -> new EntityNotFoundException("Status not found: " + ps.getId()));
             } else {
                 finalStatus = new ProjectStatus();
-                finalStatus.setName(ps.getName());
+                finalStatus.setName(NameUtils.capitalizeWords(ps.getName()));
                 finalStatus.setPriority(ps.getPriority());
             }
             finalStatus.setWorkflow(w);

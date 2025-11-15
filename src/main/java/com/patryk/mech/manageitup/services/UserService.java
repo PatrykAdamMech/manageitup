@@ -4,6 +4,7 @@ import ch.qos.logback.core.util.StringUtil;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.project.DTO.UserCreateRequest;
 import com.patryk.mech.manageitup.repositories.UserRepository;
+import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,16 @@ public class UserService {
         if(ucr.getId() != null) {
             User existing = userRepository.findById(ucr.getId())
                     .orElseThrow(() -> new EntityNotFoundException("User not found: " + ucr.getId()));
-            existing.setUsername(ucr.getUsername());
+
+            existing.setUsername(NameUtils.capitalizeWords(ucr.getUsername()));
 
             if(!StringUtil.isNullOrEmpty(ucr.getPassword())) {
                 existing.setPassword(encoder.encode(ucr.getPassword()));
             }
 
             existing.setEmail(ucr.getEmail());
-            existing.setName(ucr.getName());
-            existing.setLastName(ucr.getLastName());
+            existing.setName(NameUtils.capitalizeWords(ucr.getName()));
+            existing.setLastName(NameUtils.capitalizeWords(ucr.getLastName()));
             existing.setRole(ucr.getRole());
 
             return userRepository.save(existing);

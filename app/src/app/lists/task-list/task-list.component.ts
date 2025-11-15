@@ -111,16 +111,18 @@ constructor(private taskService: TaskService) {}
   removeTask(index: number, e?: MouseEvent) {
     e?.stopPropagation?.();
 
+    const task = this.project.tasks[index];
+
     let dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
           height: '150px',
           width: '350px',
-          data: 'Delete task?',
+          data: 'Delete task ' + task.name + '?'
         });
 
     dialogRef.afterClosed().subscribe(result => {
       if(!result) return;
 
-      const id = this.project.tasks[index].id!;
+      const id = task.id!;
       // optionally call API first; on success:
       this.editing.delete(id);
       this.tasksFA.removeAt(index);

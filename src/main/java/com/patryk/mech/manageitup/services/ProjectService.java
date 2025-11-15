@@ -12,6 +12,7 @@ import com.patryk.mech.manageitup.repositories.ProjectParticipantRepository;
 import com.patryk.mech.manageitup.repositories.ProjectRepository;
 import com.patryk.mech.manageitup.repositories.ProjectStatusRepository;
 import com.patryk.mech.manageitup.repositories.UserRepository;
+import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class ProjectService {
             Project existing = projectRepository.findById(request.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Project not found: " + request.getId()));
 
-            existing.setTitle(request.getTitle());
+            existing.setTitle(NameUtils.capitalizeWords(request.getTitle()));
             existing.setStartDate(request.getStartDate());
             existing.setEndDate(request.getEndDate());
             existing.setOwner(em.getReference(User.class, request.getOwnerId()));
@@ -101,7 +102,7 @@ public class ProjectService {
 
         System.out.println("REQUEST: " + request);
 
-        finalProject.setTitle(request.getTitle());
+        finalProject.setTitle(NameUtils.capitalizeWords(request.getTitle()));
         finalProject.setStartDate(request.getStartDate());
         finalProject.setEndDate(request.getEndDate());
 

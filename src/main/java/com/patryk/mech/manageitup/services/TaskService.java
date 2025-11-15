@@ -7,6 +7,7 @@ import com.patryk.mech.manageitup.models.project.Task;
 import com.patryk.mech.manageitup.repositories.ProjectParticipantRepository;
 import com.patryk.mech.manageitup.repositories.ProjectRepository;
 import com.patryk.mech.manageitup.repositories.TaskRepository;
+import com.patryk.mech.manageitup.shared.NameUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,8 @@ public class TaskService {
                     .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + tcr.getId()));
         }
 
-        finalTask.setDescription(tcr.getDescription());
-        finalTask.setName(tcr.getName());
+        finalTask.setDescription(NameUtils.capitalize(tcr.getDescription()));
+        finalTask.setName(NameUtils.capitalizeWords(tcr.getName()));
         finalTask.setStatus(tcr.getStatus());
 
         if(Objects.nonNull(tcr.getAssigneeId())) {

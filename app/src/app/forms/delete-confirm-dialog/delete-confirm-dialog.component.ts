@@ -13,6 +13,7 @@ export class DeleteConfirmDialogComponent {
   header: string;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: string) {
+      console.log(JSON.stringify(data, null, 4));
       this.header = data;
   }
 

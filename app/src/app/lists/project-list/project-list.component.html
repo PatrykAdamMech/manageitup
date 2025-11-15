@@ -79,7 +79,8 @@
         </ng-container>
         <ng-container matColumnDef="tasks">
           <th mat-header-cell *matHeaderCellDef>Tasks</th>
-          <td mat-cell *matCellDef="let project">
+          <td mat-cell *matCellDef="let project" class="tasks-cell">
+            <span>({{ project.tasks?.length }})</span>
             <button mat-icon-button (click)="expandProject(project); $event.stopPropagation()">
               <mat-icon>{{ expandedProjectIds.indexOf(project.id) > -1 ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>

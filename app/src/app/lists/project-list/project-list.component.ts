@@ -58,10 +58,10 @@ export class ProjectListComponent implements OnInit {
   deleteProject(project: Project, e?: MouseEvent) {
     e?.stopPropagation();
     let dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
-          height: '150px',
-          width: '350px',
-          data: 'Delete project ' + project.title + '?',
-        });
+      height: '150px',
+      width: '350px',
+      data: 'Delete project ' + project.title + '?',
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {

@@ -35,7 +35,7 @@ export class UserListComponent implements OnInit {
     let dialogRef = this.dialog.open(DeleteConfirmDialogComponent, {
           height: '150px',
           width: '350px',
-          data: user
+          data: 'Delete user ' + user.username + '?'
         });
 
     dialogRef.afterClosed().subscribe(result => {
