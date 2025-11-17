@@ -46,10 +46,15 @@ public class User {
         PMO("PMO"),
         USER("USER");
 
-        private String name;
+        private final String name;
 
         UserRoles(String name) {
+            this.name = name;
+        }
 
+        @Override
+        public String toString() {
+            return name;
         }
 
         public String getName() {

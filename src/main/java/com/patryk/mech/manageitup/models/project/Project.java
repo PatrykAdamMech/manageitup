@@ -150,6 +150,11 @@ public class Project {
         return this.participants.add(participant);
     }
 
+    public boolean removeParticipant(ProjectParticipant participant) {
+        if(this.participants.contains(participant)) return this.participants.remove(participant);
+        return false;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }

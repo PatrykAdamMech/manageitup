@@ -38,21 +38,29 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**",
-            "/users/**",
-            "/projects/**",
-            "/status/**",
-            "/workflows/**",
-            "/participant/**",
-            "/tasks/**",
             "/main/**",
     };
 
-    private static final String[] SYSTEM_ADMIN_WHITELIST = {
+    private static final String[] USER_WHITELIST = {
+            "/users/get/**",
+            "/projects/get/**",
+            "/tasks/**",
+            "/status/**",
+    };
 
+    private static final String[] SYSTEM_ADMIN_WHITELIST = {
+            "/users/**",
+            "/projects/**",
+            "/workflows/**",
+            "/participant/**",
     };
 
     private static String[] mergedLists() {
-        return ArrayUtils.addAll(PERMIT_ALL, SYSTEM_ADMIN_WHITELIST);
+        String[] merged = ArrayUtils.addAll(
+                ArrayUtils.addAll(PERMIT_ALL, SYSTEM_ADMIN_WHITELIST),
+                USER_WHITELIST);
+        System.out.println(Arrays.toString(merged));
+        return merged;
     }
 
     private final JwtTokenProvider tokenProvider;
@@ -71,7 +79,8 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(PERMIT_ALL).permitAll()
-                .requestMatchers(SYSTEM_ADMIN_WHITELIST).hasRole("SYSTEM_ADMIN")
+                .requestMatchers(USER_WHITELIST).hasAnyAuthority("USER", "SYSTEM_ADMIN")
+                .requestMatchers(SYSTEM_ADMIN_WHITELIST).hasAuthority("SYSTEM_ADMIN")
                 .anyRequest().authenticated()).exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, e) ->
                         {

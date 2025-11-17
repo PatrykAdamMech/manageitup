@@ -46,7 +46,6 @@ export class ProjectListComponent implements OnInit {
     if(this.userId) {
       this.projectService.findByOwnerId(this.userId).subscribe( data => {
         this.projects = data;
-        console.log('project: ' + JSON.stringify(this.projects, null, 4));
       });
     } else {
       this.projectService.findAllProjects().subscribe( data => {

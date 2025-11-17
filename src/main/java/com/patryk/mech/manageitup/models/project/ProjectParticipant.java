@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="ProjectParticipants", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "user_id"}))
+@Table(name="ProjectParticipants") // , uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "user_id"})
 @NamedEntityGraph(
         name = "ProjectParticipant.userAndProject",
         attributeNodes = {
@@ -75,7 +75,7 @@ public final class ProjectParticipant {
         return user;
     }
 
-    public void setUserId(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -103,5 +103,30 @@ public final class ProjectParticipant {
         this.tasks = tasks;
     }
 
+    @Override
+    public String toString() {
+        return "ProjectParticipant{" +
+                "id=" + id +
+                ", user=" + user +
+                ", role=" + role +
+                ", project=" + project +
+                ", tasks=" + tasks +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProjectParticipant that)) return false;
+
+        return getId().equals(that.getId()) && getUser().equals(that.getUser()) && getRole() == that.getRole() && getProject().equals(that.getProject());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() == null ? 0 : getId().hashCode();
+        result = 31 * result + getUser().hashCode();
+        result = 31 * result + getRole().hashCode();
+        result = 31 * result + ( getProject().getId() == null ? 0 : getProject().hashCode() );
+        return result;
+    }
 }

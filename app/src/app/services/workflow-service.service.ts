@@ -19,7 +19,7 @@ export class WorkflowService {
   }
 
   public findById(id: string): Observable<Workflow> {
-    return this.http.get<Workflow>(this.workflowUrl + '/all/'+id);
+    return this.http.get<Workflow>(this.workflowUrl + '/get/'+id);
   }
 
   public findOptions(matcher: string): Observable<WorkflowOption[]> {

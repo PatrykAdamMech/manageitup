@@ -1,0 +1,5 @@
+.project-form-participants-display {
+  display: grid;
+  flex-wrap: wrap;
+
+}

@@ -6,6 +6,7 @@ import com.patryk.mech.manageitup.models.project.DTO.UserResponse;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
 import com.patryk.mech.manageitup.repositories.ProjectParticipantRepository;
+import com.patryk.mech.manageitup.services.ProjectParticipantService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ import java.util.stream.StreamSupport;
 public class ProjectParticipantController {
 
     private ProjectParticipantRepository ppRepository;
+    private ProjectParticipantService ppService;
 
-    private EntityManager entityManager;
-
-    public ProjectParticipantController(ProjectParticipantRepository ppRepository, EntityManager entityManager) {
+    public ProjectParticipantController(ProjectParticipantRepository ppRepository, ProjectParticipantService ppService) {
         this.ppRepository = ppRepository;
-        this.entityManager = entityManager;
+        this.ppService = ppService;
+
     }
 
     @GetMapping("/all")
@@ -46,10 +47,14 @@ public class ProjectParticipantController {
     @PostMapping("/add")
     public ResponseEntity<String> saveParticipant(@RequestBody ProjectParticipantCreateRequest participant) {
         if(participant != null) {
-            ProjectParticipant proPart = participant.asProjectParticipant(this.entityManager);
-            UUID project = ppRepository.save(proPart).getId();
-
-            return new ResponseEntity<String>(project.toString(), HttpStatus.OK);
+            UUID proPart;
+            try {
+                proPart = ppService.saveProjectParticipantFromRequest(participant).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return new ResponseEntity<String>(proPart.toString(), HttpStatus.OK);
         }
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }

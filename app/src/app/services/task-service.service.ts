@@ -17,7 +17,7 @@ export class TaskService {
   }
 
   public findTasksByProjectId(projectId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(this.tasksUrl + '/all/' + projectId);
+    return this.http.get<Task[]>(this.tasksUrl + '/get/' + projectId);
   }
 
   public findAllStatuses(): Observable<TaskStatus[]> {

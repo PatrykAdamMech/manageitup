@@ -49,7 +49,7 @@ public class UserController {
         return responses;
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/get/{id}")
     public User getAllUsers(@PathVariable("id") UUID id) {
         return userRepository.findById(id).orElse(null);
     }
@@ -84,36 +84,41 @@ public class UserController {
     public ResponseEntity<String> saveUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
             user.setPassword(encoder.encode(user.getPassword()));
-            UUID savedId = userRepository.save(user.asUser()).getId();
-
+            UUID savedId;
+            try {
+                savedId = userRepository.save(user.asUser()).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);
         }
-
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
-            if(Objects.isNull(user.getId()))
-                return new ResponseEntity<String>("Missing ID!", HttpStatus.BAD_REQUEST);
-
-            UUID savedId = service.saveUserFromRequest(user).getId();
-
+            UUID savedId;
+            try {
+                savedId = service.saveUserFromRequest(user).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<String>(savedId.toString(), HttpStatus.OK);
         }
-
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable UUID id) {
-        User foundUser = userRepository.findById(id).orElse(null);
-        if(foundUser != null) {
-            userRepository.delete(foundUser);
-            return new ResponseEntity<String>("OK!", HttpStatus.OK);
-        }
 
-        return new ResponseEntity<String>("Not Found!", HttpStatus.NOT_FOUND);
+        User foundUser = userRepository.findById(id)
+                .orElse(null);
+        if(foundUser == null) return new ResponseEntity<>("User not found with ID: " + id, HttpStatus.NOT_FOUND);
+
+        userRepository.deleteById(foundUser.getId());
+        return ResponseEntity.ok("Deleted!");
     }
 }

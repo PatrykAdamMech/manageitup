@@ -47,7 +47,7 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 
-type ParticipantPayload = {  role: ProjectRoles; userId: string };
+type ParticipantPayload = {  id: string | null, role: ProjectRoles; userId: string };
 type StatusInput =
   | (ProjectStatusOption & { priority?: number })
   | { id: string; priority?: number }
@@ -268,16 +268,13 @@ export class ProjectFormComponent implements OnInit {
     });
 
     dialogRef.afterClosed().pipe(
-        filter((result): result is any => !!result),
+      filter((result): result is any => !!result),
 
-        switchMap(result =>
-          this.prepareStatusesForDisplay(result.statuses).pipe(
-            tap(prepared => { result.statuses = prepared; }),
-            map(() => result)
-    )
-    ),
-
-    tap(workflow => {
+      switchMap(result =>
+        this.prepareStatusesForDisplay(result.statuses).pipe(
+          tap(prepared => { result.statuses = prepared; }),
+          map(() => result))),
+      tap(workflow => {
           this.statusesToDisplay = workflow.statuses.sort(this.sortStatuses);
           this.workflow = workflow;
           this.mainFormGroup.get('workflow')!.setValue(workflow);
@@ -291,8 +288,7 @@ export class ProjectFormComponent implements OnInit {
     const calls = participants.map(p =>
     this.userService.findById(p.userId).pipe(
       map(user => new ProjectParticipant({ user, role: p.role })),
-      catchError(() => of(null))
-        )
+      catchError(() => of(null)))
     );
     return forkJoin(calls).pipe(
         map(list => list.filter((x): x is ProjectParticipant => !!x))
@@ -402,6 +398,7 @@ export class ProjectFormComponent implements OnInit {
       const finalPP = new ProjectParticipantCreateRequest();
 
       if(pp && pp.user) {
+        finalPP.id = pp.id ?? null;
         finalPP.role = pp.role;
         finalPP.userId = pp.user.id ?? '';
       }

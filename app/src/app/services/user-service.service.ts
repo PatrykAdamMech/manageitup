@@ -22,7 +22,7 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private base: string
   }
 
   public findById(id: string): Observable<User> {
-    return this.http.get<User>(this.usersUrl + '/all/'+id);
+    return this.http.get<User>(this.usersUrl + '/get/'+id);
   }
 
   public findOptions(matcher: string): Observable<UserOption[]> {

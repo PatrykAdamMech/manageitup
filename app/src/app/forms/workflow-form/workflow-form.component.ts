@@ -20,6 +20,7 @@ export class WorkflowFormComponent {
   private dialogRef = inject<MatDialogRef<WorkflowFormComponent>>(MatDialogRef);
 
   workflow: Workflow;
+  isEdit: boolean = false;
 
   priorities: number[] = [1,2,3,4,5,6,7,8,9];
 
@@ -30,15 +31,13 @@ export class WorkflowFormComponent {
       this.buildWorkflowForm();
   }
 
-  isStatusPayload(x: any): x is StatusPayload {
-    return !!x && typeof x.priority === 'number' && (typeof x.name === 'string' || x.id != null);
-  }
-
   buildWorkflowForm() {
     if (!this.workflow) {
       if (this.statusesFA.length === 0) this.addStatusRow();
       return;
     }
+
+    this.isEdit = true;
 
     this.form.patchValue({ name: this.workflow.name }, { emitEvent: false });
     this.statusesFA.clear();

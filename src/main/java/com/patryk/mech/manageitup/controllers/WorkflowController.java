@@ -49,7 +49,7 @@ public class WorkflowController {
                 );
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/get/{id}")
     public Workflow getAllWorkflows(@PathVariable("id") UUID id) {
         return workflowRepository.findById(id).orElse(null);
     }
@@ -57,10 +57,16 @@ public class WorkflowController {
     @PostMapping("/add")
     public ResponseEntity<String> saveWorkflow(@RequestBody WorkflowCreateRequest workflow) {
         if(workflow != null) {
-            Workflow saved = this.workflowService.saveWorkflowFromRequest(workflow);
-            return new ResponseEntity<String>(saved.getId().toString(), HttpStatus.OK);
+            Workflow saved;
+            try {
+                saved = this.workflowService.saveWorkflowFromRequest(workflow);
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return new ResponseEntity<>(saved.getId().toString(), HttpStatus.OK);
         }
-        return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/select")
@@ -84,10 +90,12 @@ public class WorkflowController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteWorkflow(@RequestParam UUID id) {
-        if(Objects.nonNull(id)) {
-           this.workflowRepository.deleteById(id);
-           return ResponseEntity.ok("Deleted!" + id);
-        }
-        return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+
+        Workflow foundWorkflow = workflowRepository.findById(id)
+                .orElse(null);
+        if(foundWorkflow == null) return new ResponseEntity<>("Workflow not found with ID: " + id, HttpStatus.NOT_FOUND);
+
+        this.workflowRepository.deleteById(id);
+        return ResponseEntity.ok("Deleted!" + id);
     }
 }

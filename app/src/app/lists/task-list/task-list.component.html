@@ -23,13 +23,13 @@
   <!-- Name -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+    <td class="input-cell-name" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
       <ng-container *ngIf="!isEditing(project.tasks[i].id); else editName">
         {{ project.tasks[i].name }}
       </ng-container>
       <ng-template #editName>
         <mat-form-field>
-          <input matInput formControlName="name" />
+          <input class="input-cell-name" matInput formControlName="name" />
         </mat-form-field>
       </ng-template>
     </td>
@@ -38,13 +38,13 @@
   <!-- Assignee -->
   <ng-container matColumnDef="assignee">
     <th mat-header-cell *matHeaderCellDef>Assignee</th>
-    <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+    <td class="input-cell-assignee" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
       <ng-container *ngIf="!isEditing(project.tasks[i].id); else editAssignee">
         {{ project.tasks[i].assignee?.user?.name }} {{ project.tasks[i].assignee?.user?.lastName }}
       </ng-container>
       <ng-template #editAssignee>
         <mat-form-field>
-          <mat-select formControlName="assigneeId">
+          <mat-select class="input-cell-assignee" formControlName="assigneeId">
             <mat-option *ngFor="let a of assignees" [value]="a.id">
               {{ a.user?.name }} {{ a.user?.lastName }} ({{a.role}})
             </mat-option>
@@ -57,13 +57,13 @@
   <!-- Status -->
   <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef>Status</th>
-    <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+    <td class="input-cell-status" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
       <ng-container *ngIf="!isEditing(project.tasks[i].id); else editStatus">
         {{ statusLabel(project.tasks[i].status) }}
       </ng-container>
       <ng-template #editStatus>
         <mat-form-field>
-          <mat-select formControlName="status">
+          <mat-select class="input-cell-status" formControlName="status">
             <mat-option *ngFor="let s of availableStatuses; trackBy: trackStatusByName"
                         [value]="s.name">
               {{ s.label }}
@@ -77,13 +77,13 @@
   <!-- Description -->
   <ng-container matColumnDef="description">
     <th mat-header-cell *matHeaderCellDef>Description</th>
-    <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+    <td class="input-cell-description" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
       <ng-container *ngIf="!isEditing(project.tasks[i].id); else editDesc">
         {{ project.tasks[i].description }}
       </ng-container>
       <ng-template #editDesc>
         <mat-form-field class="w-full">
-          <input matInput formControlName="description" />
+          <input class="input-cell-description" matInput formControlName="description" />
         </mat-form-field>
       </ng-template>
     </td>

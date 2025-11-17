@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
 import { AuthService } from '../../services/auth-service.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { User } from '../../model/user';
 
 @Component({
   selector: 'app-top-ribbon',
@@ -10,7 +11,8 @@ import { Router } from '@angular/router';
 })
 export class TopRibbonComponent {
 
-  constructor(private location: Location, private router: Router, public authService: AuthService) {}
+  constructor(private location: Location, private router: Router, public authService: AuthService) {
+  }
 
   goBack() {
     if (window.history.length > 1) {

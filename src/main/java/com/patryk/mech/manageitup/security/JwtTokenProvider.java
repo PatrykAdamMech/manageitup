@@ -7,10 +7,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -29,8 +34,13 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtExpirationMs);
 
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
         return Jwts.builder()
                 .setSubject(username)
+                .claim("roles", roles)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -50,5 +60,38 @@ public class JwtTokenProvider {
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getRolesFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Object rolesObj = claims.get("roles");
+        System.out.println("roles: " + rolesObj);
+        if (rolesObj == null) {
+            return Collections.emptyList();
+        }
+
+        if (rolesObj instanceof List<?>) {
+            return ((List<?>) rolesObj).stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        }
+
+        if (rolesObj instanceof String) {
+            String rolesStr = (String) rolesObj;
+            return Arrays.stream(rolesStr.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+        }
+
+        System.out.println("No defing roles");
+
+        return Collections.emptyList();
     }
 }

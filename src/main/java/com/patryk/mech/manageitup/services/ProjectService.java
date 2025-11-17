@@ -30,21 +30,24 @@ public class ProjectService {
     private ProjectStatusRepository psRepository;
     private ProjectParticipantRepository ppRepository;
     private WorkflowService workflowService;
+    private ProjectParticipantService ppService;
     private UserRepository userRepository;
     private EntityManager em;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectStatusRepository psRepository, EntityManager em, WorkflowService workflowService, ProjectParticipantRepository ppRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectStatusRepository psRepository, EntityManager em, WorkflowService workflowService, ProjectParticipantRepository ppRepository, ProjectParticipantService ppService) {
         this.projectRepository = projectRepository;
         this.psRepository = psRepository;
         this.em = em;
         this.workflowService = workflowService;
         this.ppRepository = ppRepository;
+        this.ppService = ppService;
 
     }
 
     @Transactional
     public Project saveProjectFromRequest(ProjectCreateFullRequest request) {
         if (request.getId() != null) {
+            System.out.println("Existing project!");
             Project existing = projectRepository.findById(request.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Project not found: " + request.getId()));
 
@@ -54,32 +57,30 @@ public class ProjectService {
             existing.setOwner(em.getReference(User.class, request.getOwnerId()));
             existing.setWorkflow(workflowService.requestToWorkflow(request.getWorkflow()));
 
-            // Build map of requested participants by userId
-            Map<UUID, ProjectParticipantCreateRequest> requestedByUser = request.getParticipants()
-                    .stream()
-                    .collect(Collectors.toMap(ProjectParticipantCreateRequest::getUserId, Function.identity()));
+            List<ProjectParticipant> collectedParticipants;
+            List<ProjectParticipant> toDelete;
+            List<ProjectParticipant> toAdd;
 
-            // Remove participants that are not in the request (use iterator to remove safely)
-            Iterator<ProjectParticipant> it = existing.getParticipants().iterator();
-            while (it.hasNext()) {
-                ProjectParticipant pp = it.next();
-                UUID userId = pp.getUser().getId();
-                if (!requestedByUser.containsKey(userId)) {
-                    it.remove(); // with orphanRemoval=true this will delete the row at flush
-                } else {
-                    // update existing participant's fields from request
-                    ProjectParticipantCreateRequest reqPP = requestedByUser.remove(userId);
-                    pp.setRole(reqPP.getRole());
-                    // update other fields...
-                }
-            }
+            collectedParticipants = request.getParticipants().stream()
+                    .map(p -> {
+                        p.setProjectId(existing.getId());
+                        ProjectParticipant pp = ppService.saveProjectParticipantFromRequest(p);
+                        return pp;
+                    }).toList();
 
-            // requestedByUser now contains only truly new participants — add them to the SAME collection
-            for (ProjectParticipantCreateRequest newReq : requestedByUser.values()) {
-                ProjectParticipant newPP = newReq.asProjectParticipant(em); // user reference, role etc.
-                newPP.setProject(existing);
-                existing.getParticipants().add(newPP); // IMPORTANT — mutate existing collection
-            }
+            // remove deleted participants
+            toDelete = existing.getParticipants().stream()
+                    .filter(pp -> !collectedParticipants.contains(pp))
+                    .toList();
+
+            toDelete.forEach(existing::removeParticipant);
+
+            // add missing participants
+            toAdd = collectedParticipants.stream()
+                    .filter(pp -> !existing.getParticipants().contains(pp))
+                    .toList();
+
+            toAdd.forEach(existing::addParticipant);
 
             if(Objects.nonNull(request.getStatusId())) {
                 ProjectStatus s = psRepository.findById(request.getStatusId())
@@ -120,7 +121,7 @@ public class ProjectService {
 
         Set<ProjectParticipant> pps = new HashSet<>();
         for(ProjectParticipantCreateRequest ppcr : request.getParticipants()) {
-            ProjectParticipant pp = ppcr.asProjectParticipant(this.em);
+                ProjectParticipant pp = ppService.requestToProjectParticipant(ppcr);
             pp.setProject(finalProject);
             pps.add(pp);
         }

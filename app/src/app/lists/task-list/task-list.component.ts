@@ -10,37 +10,37 @@ import { DeleteConfirmDialogComponent } from '../../forms/delete-confirm-dialog/
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-selector: 'app-task-list',
-templateUrl: './task-list.component.html',
-styleUrls: ['./task-list.component.css']
+  selector: 'app-task-list',
+  templateUrl: './task-list.component.html',
+  styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent {
-@Input() project: Project = new Project();
+  @Input() project: Project = new Project();
 
-columnsToDisplay = ['actions','name','assignee','status','description'];
-private fb = inject(FormBuilder);
-readonly dialog = inject(MatDialog);
+  columnsToDisplay = ['actions','name','assignee','status','description'];
+  private fb = inject(FormBuilder);
+  readonly dialog = inject(MatDialog);
 
-form = this.fb.group({
-tasks: this.fb.array<FormGroup>([])
-});
+  form = this.fb.group({
+    tasks: this.fb.array<FormGroup>([])
+  });
 
-/** keep track of which rows are in edit mode */
-private editing = new Set<string>();
+  /** keep track of which rows are in edit mode */
+  private editing = new Set<string>();
 
-private newRows = new Set<string>();
+  private newRows = new Set<string>();
 
-private statusMap = new Map<string, string>();
+  private statusMap = new Map<string, string>();
 
-// mock options – replace with real data
-assignees: Array<ProjectParticipant> = [];
-statuses: string[] = ['Not assigned','Assigned','In progress','Closed'];
-availableStatuses: Array<TaskStatus> = [];
+  // mock options – replace with real data
+  assignees: Array<ProjectParticipant> = [];
+  statuses: string[] = ['Not assigned','Assigned','In progress','Closed'];
+  availableStatuses: Array<TaskStatus> = [];
 
-trackStatusByName = (_: number, s: TaskStatus) => s.name;
-trackRowById = (_: number, t: Task) => t.id ?? _;
+  trackStatusByName = (_: number, s: TaskStatus) => s.name;
+  trackRowById = (_: number, t: Task) => t.id ?? _;
 
-constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit() {
     this.taskService.findAllStatuses().subscribe(data => {

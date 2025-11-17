@@ -4,20 +4,16 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.patryk.mech.manageitup.models.User;
 import com.patryk.mech.manageitup.models.project.Project;
 import com.patryk.mech.manageitup.models.project.ProjectParticipant;
-import com.patryk.mech.manageitup.repositories.ProjectRepository;
-import com.patryk.mech.manageitup.repositories.UserRepository;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
-import jakarta.validation.constraints.Null;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class ProjectParticipantCreateRequest {
+    @Nullable
+    private UUID id;
     private UUID userId;
     private ProjectParticipant.ProjectRoles role;
     @Nullable
@@ -69,6 +65,15 @@ public class ProjectParticipantCreateRequest {
         this.projectId = projectId;
     }
 
+    @Nullable
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @Transactional
     public ProjectParticipant asProjectParticipant(EntityManager em) {
         ProjectParticipant pp = new ProjectParticipant();
@@ -77,7 +82,7 @@ public class ProjectParticipantCreateRequest {
 
         User user = em.getReference(User.class, this.getUserId());
         if(Objects.nonNull(user)) {
-            pp.setUserId(user);
+            pp.setUser(user);
         }
 
         if(Objects.nonNull(this.getProjectId())) {

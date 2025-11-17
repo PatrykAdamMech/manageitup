@@ -2,6 +2,7 @@
   <div class="card-body">
     <div class="list-body">
       <ng-container *ngFor="let p of participants">
+        <div>
         <h3>{{p.user?.name}} {{p.user?.lastName}}</h3>
         <table>
           <tr>
@@ -18,6 +19,7 @@
           </tr>
         </table>
         <br />
+        </div>
       </ng-container>
     </div>
   </div>

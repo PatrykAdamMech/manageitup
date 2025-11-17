@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="save()" class="workflow-form form">
   <mat-dialog-content>
-  <h3>Create new workflow</h3>
+  <h3>{{ isEdit ? 'Edit existing workflow' : 'Create new workflow' }}</h3>
   <div class="workflow-name-wrapper">
 
     <mat-form-field>

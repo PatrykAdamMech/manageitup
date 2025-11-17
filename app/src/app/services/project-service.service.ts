@@ -20,15 +20,15 @@ export class ProjectService {
   }
 
   public findById(id: string): Observable<Project> {
-    return this.http.get<Project>(this.projectsUrl + '/all/' + id);
+    return this.http.get<Project>(this.projectsUrl + '/get/' + id);
   }
 
   public findByOwnerId(id: string): Observable<Project[]> {
-      return this.http.get<Project[]>(this.projectsUrl + '/all/user/owner/' + id);
+      return this.http.get<Project[]>(this.projectsUrl + '/get/user/owner/' + id);
   }
 
   public findByParticipantId(id: string): Observable<Project[]> {
-      return this.http.get<Project[]>(this.projectsUrl + '/all/user/participant/' + id);
+      return this.http.get<Project[]>(this.projectsUrl + '/get/user/participant/' + id);
   }
 
 

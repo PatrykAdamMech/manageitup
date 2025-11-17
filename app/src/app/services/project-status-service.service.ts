@@ -27,6 +27,6 @@ export class ProjectStatusService {
   }
 
   public findById(id: string): Observable<ProjectStatus> {
-      return this.http.get<ProjectStatus>(this.statusUrl + '/all/'+id);
+      return this.http.get<ProjectStatus>(this.statusUrl + '/get/'+id);
   }
 }

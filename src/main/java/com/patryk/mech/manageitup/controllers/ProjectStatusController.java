@@ -42,14 +42,20 @@ public class ProjectStatusController {
                 );
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/get/{id}")
     public ProjectStatus getStatusById(@PathVariable UUID id) {
         return psRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/add")
     public ResponseEntity<UUID> saveStatus(@RequestBody ProjectStatus status) {
-        UUID id = psRepository.save(status).getId();
+        UUID id;
+        try {
+            id = psRepository.save(status).getId();
+        } catch (Exception e) {
+            System.out.println("Error while saving the project!: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<UUID>(id, HttpStatus.OK);
     }
 

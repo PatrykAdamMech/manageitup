@@ -43,7 +43,7 @@ public class TaskController {
                 .toList();
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/get/{id}")
     public List<TaskResponse> getAllTasksForProject(@PathVariable UUID projectId) {
         return this.taskRepository.findByProject_Id(projectId)
                 .stream()
@@ -53,16 +53,26 @@ public class TaskController {
 
     @PostMapping(value = "/add", consumes = "application/json", produces = "text/plain")
     public ResponseEntity<String> addTask(@RequestBody TaskCreateRequest tcr) {
-        UUID createdTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
+        UUID createdTaskId = null;
+        try {
+            createdTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
+        } catch (Exception e) {
+            System.out.println("Error while saving the task: " + e.getMessage());
+        }
 
-        return new ResponseEntity<>(createdTaskId.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(createdTaskId == null ? "" : createdTaskId.toString(), HttpStatus.OK);
     }
 
     @PutMapping(value = "/update", consumes = "application/json", produces = "text/plain")
     public ResponseEntity<String> updateTask(@RequestBody TaskCreateRequest tcr) {
         System.out.println("Update request; Body: " + tcr);
-        UUID createdTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
-
+        UUID createdTaskId;
+        try {
+            createdTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
+        } catch (Exception e) {
+            System.out.println("Error while saving the project!: " + e.getMessage());
+            return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<>(createdTaskId.toString(), HttpStatus.OK);
     }
 
@@ -77,10 +87,10 @@ public class TaskController {
     public ResponseEntity<String> deleteTaskById(@PathVariable UUID id) {
 
         Task foundTask = taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found with ID: " + id));
+                .orElse(null);
+        if(foundTask == null) return new ResponseEntity<>("Task not found with ID: " + id, HttpStatus.NOT_FOUND);
 
         taskRepository.deleteById(foundTask.getId());
-
         return ResponseEntity.ok("Deleted!");
     }
 }

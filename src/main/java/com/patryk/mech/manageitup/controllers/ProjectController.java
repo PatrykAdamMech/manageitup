@@ -39,16 +39,16 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectResponse>> getAllProject() {
+    public ResponseEntity<Set<ProjectResponse>> getAllProject() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(projectRepository.findAll()
                     .stream()
                     .map(ProjectResponse::fromProject)
-                    .toList()
-                );
+                    .collect(Collectors.toSet())
+        );
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable UUID id) {
         Project foundProject = this.projectRepository.findById(id).orElse(null);
         if(foundProject != null) {
@@ -57,7 +57,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/all/user/owner/{id}")
+    @GetMapping("/get/user/owner/{id}")
     public ResponseEntity<Set<ProjectResponse>> getProjectByUserId(@PathVariable UUID id) {
         Set<ProjectResponse> responses = projectRepository.findDistinctByOwner_Id(id)
                 .stream().map(ProjectResponse::new)
@@ -69,7 +69,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/all/user/participant/{id}")
+    @GetMapping("/get/user/participant/{id}")
     public ResponseEntity<Set<ProjectResponse>> getProjectByParticipantId(@PathVariable UUID id) {
         Set<ProjectResponse> responses = projectRepository.findDistinctByParticipants_User_Id(id)
                 .stream().map(ProjectResponse::new)
@@ -84,7 +84,13 @@ public class ProjectController {
     @PostMapping("/add")
     public ResponseEntity<String> addProject(@RequestBody ProjectCreateRequest request) {
         if(request != null) {
-            UUID savedProject = projectRepository.save(request.asProject(em)).getId();
+            UUID savedProject;
+            try {
+                savedProject = projectRepository.save(request.asProject(em)).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
         }
@@ -94,8 +100,13 @@ public class ProjectController {
     @PostMapping("/add/full")
     public ResponseEntity<String> addProjectFull(@RequestBody ProjectCreateFullRequest request) {
         if(request != null) {
-            UUID savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
-
+            UUID savedProject;
+            try {
+                savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
         }
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
@@ -103,20 +114,31 @@ public class ProjectController {
 
     @PutMapping("/update/full")
     public ResponseEntity<String> updateProjectFull(@RequestBody ProjectCreateFullRequest request) {
-        System.out.println("Received create request: " + request);
+        System.out.println("Received update request: " + request);
         if(request != null) {
-            UUID savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
-
+            UUID savedProject;
+            try {
+                savedProject = projectRepository.save(projectService.saveProjectFromRequest(request)).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                e.printStackTrace();
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
         }
-        return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Bad Request!", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update/status")
     public ResponseEntity<String> updateProjectStatus(@RequestBody ProjectStatusUpdateRequest request) {
         if(request != null) {
-            UUID savedProject = projectService.saveStatusUpdate(request).getId();
-
+            UUID savedProject;
+            try {
+                savedProject  = projectService.saveStatusUpdate(request).getId();
+            } catch (Exception e) {
+                System.out.println("Error while saving the project!: " + e.getMessage());
+                return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             return new ResponseEntity<>(savedProject.toString(), HttpStatus.OK);
         }
         return new ResponseEntity<String>("Bad Request!", HttpStatus.BAD_REQUEST);
@@ -124,11 +146,12 @@ public class ProjectController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> removeProject(@PathVariable UUID id) {
-        Project project = projectRepository.findById(id).orElse(null);
-        if(project == null) ResponseEntity.status(HttpStatus.NO_CONTENT).body("Project not found!");
+
+        Project project = projectRepository.findById(id)
+                .orElse(null);
+        if(project == null) ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found!");
 
         projectRepository.deleteById(id);
-
         return ResponseEntity.status(HttpStatus.OK).body("Deleted!");
     }
 
