@@ -46,6 +46,7 @@ public class SecurityConfig {
             "/projects/get/**",
             "/tasks/**",
             "/status/**",
+            "/projects/update/status",
     };
 
     private static final String[] SYSTEM_ADMIN_WHITELIST = {

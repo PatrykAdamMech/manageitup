@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-    public User getAllUsers(@PathVariable("id") UUID id) {
+    public User getUserById(@PathVariable("id") UUID id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> saveUser(@RequestBody UserCreateRequest user) {
+    public ResponseEntity<String> addUser(@RequestBody UserCreateRequest user) {
         if(user != null) {
             user.setPassword(encoder.encode(user.getPassword()));
             UUID savedId;

@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("Invalid token!");
             }
         } else {
-            System.out.println("no auth header");
+            System.out.println("No auth header");
         }
         filterChain.doFilter(request, response);
     }

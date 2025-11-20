@@ -88,10 +88,8 @@ public class ProjectService {
                 existing.setStatus(s);
             }
 
-            // Save managed entity
             return projectRepository.save(existing);
         } else {
-            // create flow — new Project, setting a brand new participants list is OK here
             Project p = requestToProject(request);
             return projectRepository.save(p);
         }

@@ -135,10 +135,6 @@ export class ProjectListComponent implements OnInit {
     window.location.reload();
   }
 
-  onStatusPicked(project: Project, e?: MouseEvent) {
-    // possible extension
-  }
-
   cancelStatusEdit() {
     this.editable = false;
     this.editedProjectId = '';

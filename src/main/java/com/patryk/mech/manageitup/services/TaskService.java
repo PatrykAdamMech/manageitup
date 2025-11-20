@@ -32,7 +32,7 @@ public class TaskService {
     }
 
     @Transactional
-    public Task saveTaskFromRequest(TaskCreateRequest tcr) {
+    public Task     saveTaskFromRequest(TaskCreateRequest tcr) {
         return taskRepository.save(requestToTask(tcr));
     }
 

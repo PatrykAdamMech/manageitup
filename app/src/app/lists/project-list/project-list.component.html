@@ -47,7 +47,6 @@
               <mat-form-field>
                 <mat-select
                   [formControl]="statusFormCtrl"
-                  (selectionChange)="onStatusPicked(project, $event.value)"
                 >
                   <mat-option *ngFor="let s of statusesToDisplay" [value]="s.id">
                     {{ s.priority }}: {{ s.name }}

@@ -66,14 +66,14 @@ public class TaskController {
     @PutMapping(value = "/update", consumes = "application/json", produces = "text/plain")
     public ResponseEntity<String> updateTask(@RequestBody TaskCreateRequest tcr) {
         System.out.println("Update request; Body: " + tcr);
-        UUID createdTaskId;
+        UUID updatedTaskId;
         try {
-            createdTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
+            updatedTaskId = this.taskService.saveTaskFromRequest(tcr).getId();
         } catch (Exception e) {
-            System.out.println("Error while saving the project!: " + e.getMessage());
+            System.out.println("Error while saving the task!: " + e.getMessage());
             return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(createdTaskId.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(updatedTaskId.toString(), HttpStatus.OK);
     }
 
     @GetMapping("/statuses/all")

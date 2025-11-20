@@ -52,7 +52,6 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
-            // log if you want
             return false;
         }
     }
@@ -62,7 +61,6 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    @SuppressWarnings("unchecked")
     public List<String> getRolesFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -72,22 +70,23 @@ public class JwtTokenProvider {
 
         Object rolesObj = claims.get("roles");
         System.out.println("roles: " + rolesObj);
-        if (rolesObj == null) {
-            return Collections.emptyList();
-        }
-
-        if (rolesObj instanceof List<?>) {
-            return ((List<?>) rolesObj).stream()
-                    .map(Object::toString)
-                    .collect(Collectors.toList());
-        }
-
-        if (rolesObj instanceof String) {
-            String rolesStr = (String) rolesObj;
-            return Arrays.stream(rolesStr.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .collect(Collectors.toList());
+        switch (rolesObj) {
+            case null -> {
+                return Collections.emptyList();
+            }
+            case List<?> objects -> {
+                return objects.stream()
+                        .map(Object::toString)
+                        .collect(Collectors.toList());
+            }
+            case String rolesStr -> {
+                return Arrays.stream(rolesStr.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toList());
+            }
+            default -> {
+            }
         }
 
         System.out.println("No defing roles");
